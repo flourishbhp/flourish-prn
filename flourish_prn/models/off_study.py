@@ -12,7 +12,7 @@ from edc_visit_schedule.site_visit_schedules import site_visit_schedules
 
 
 
-class CaregiverOffStudy(OffScheduleModelMixin,
+class OffStudy(OffScheduleModelMixin,
                        ActionModelMixin, BaseUuidModel):
 
     tracking_identifier_prefix = 'MO'
@@ -40,5 +40,5 @@ class CaregiverOffStudy(OffScheduleModelMixin,
     
     class Meta:
         app_label = 'flourish_prn'
-        verbose_name = 'Caregiver Off Study'
-        verbose_name_plural = 'Caregiver Off Studies'
+        verbose_name = 'Off Study'
+        verbose_name_plural = 'Off Studies'

@@ -8,7 +8,7 @@ from edc_action_item.model_mixins.action_model_mixin import ActionModelMixin
 
 
 
-class CaregiverDeathReport(ActionModelMixin,
+class DeathReport(ActionModelMixin,
                           SiteModelMixin, SearchSlugModelMixin, BaseUuidModel):
 
     objects = SubjectIdentifierManager()
@@ -22,4 +22,4 @@ class CaregiverDeathReport(ActionModelMixin,
 
     class Meta:
         app_label = 'flourish_prn'
-        verbose_name = 'Caregiver Death Report'
+        verbose_name = 'Death Report'

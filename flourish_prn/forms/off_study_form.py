@@ -1,10 +1,10 @@
 from django import forms
 from edc_form_validators import FormValidatorMixin
 
-from ..models import CaregiverOffStudy
+from ..models import OffStudy
 
 
-class CaregiverOffStudyForm(FormValidatorMixin, forms.ModelForm):
+class OffStudyForm(FormValidatorMixin, forms.ModelForm):
 
 
     def clean(self):
@@ -15,5 +15,5 @@ class CaregiverOffStudyForm(FormValidatorMixin, forms.ModelForm):
             self.cleaned_data.get('report_datetime'))
 
     class Meta:
-        model = CaregiverOffStudy
+        model = OffStudy
         fields = '__all__'

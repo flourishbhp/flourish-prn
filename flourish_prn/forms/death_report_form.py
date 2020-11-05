@@ -1,10 +1,10 @@
 from django import forms
 from edc_form_validators import FormValidatorMixin
 
-from ..models import CaregiverDeathReport
+from ..models import DeathReport
 
 
-class CaregiverDeathReportForm(FormValidatorMixin, forms.ModelForm):
+class DeathReportForm(FormValidatorMixin, forms.ModelForm):
 
 
     def clean(self):
@@ -15,5 +15,5 @@ class CaregiverDeathReportForm(FormValidatorMixin, forms.ModelForm):
         super().clean()
 
     class Meta:
-        model = CaregiverDeathReport
+        model = DeathReport
         fields = '__all__'

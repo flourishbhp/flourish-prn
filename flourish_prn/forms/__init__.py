@@ -1,2 +1,2 @@
-from .caregiver_off_study_form import CaregiverOffStudyForm
-from .caregiver_death_report_form import CaregiverDeathReportForm
+from .off_study_form import OffStudyForm
+from .death_report_form import DeathReportForm

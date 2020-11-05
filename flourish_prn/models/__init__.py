@@ -1,2 +1,2 @@
-from .caregiver_off_study import CaregiverOffStudy
-from .caregiver_death_report import CaregiverDeathReport
+from .off_study import OffStudy
+from .death_report import DeathReport
