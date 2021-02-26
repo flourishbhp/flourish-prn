@@ -7,7 +7,7 @@ style = color_style()
 
 class AppConfig(DjangoAppConfig):
     name = 'flourish_prn'
-    verbose_name = 'Flourish prn'
+    verbose_name = 'Flourish PRN'
     admin_site_name = 'flourish_prn_admin'
 
 

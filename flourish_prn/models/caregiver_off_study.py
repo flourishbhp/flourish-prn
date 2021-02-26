@@ -8,12 +8,9 @@ from edc_protocol.validators import datetime_not_before_study_start
 
 from edc_action_item.model_mixins import ActionModelMixin
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
-from edc_visit_schedule.site_visit_schedules import site_visit_schedules
 
 
-
-class OffStudy(OffScheduleModelMixin,
-                       ActionModelMixin, BaseUuidModel):
+class OffStudy(OffScheduleModelMixin, ActionModelMixin, BaseUuidModel):
 
     tracking_identifier_prefix = 'MO'
     report_datetime = models.DateTimeField(
@@ -36,8 +33,7 @@ class OffStudy(OffScheduleModelMixin,
 
     def take_off_schedule(self):
         pass
-    
-    
+
     class Meta:
         app_label = 'flourish_prn'
         verbose_name = 'Off Study'
