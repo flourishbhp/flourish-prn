@@ -6,14 +6,14 @@ from edc_metadata import NextFormGetter
 from edc_model_admin import (
     ModelAdminNextUrlRedirectMixin, ModelAdminFormInstructionsMixin,
     ModelAdminFormAutoNumberMixin, ModelAdminAuditFieldsMixin,
-    ModelAdminReadOnlyMixin, ModelAdminInstitutionMixin,
+    ModelAdminInstitutionMixin,
     ModelAdminRedirectOnDeleteMixin)
 from edc_model_admin import audit_fieldset_tuple
 from edc_subject_dashboard import ModelAdminSubjectDashboardMixin
 
 from ..admin_site import flourish_prn_admin
-from ..forms import OffStudyForm
-from ..models import OffStudy
+from ..forms import CareegiverOffStudyForm
+from ..models import CaregiverOffStudy
 from .exportaction_mixin import ExportActionMixin
 
 
@@ -39,10 +39,10 @@ class ModelAdminMixin(ModelAdminNextUrlRedirectMixin,
         return dict(subject_identifier=obj.subject_identifier)
 
 
-@admin.register(OffStudy, site=flourish_prn_admin)
-class OffStudyAdmin(ModelAdminMixin, admin.ModelAdmin):
+@admin.register(CaregiverOffStudy, site=flourish_prn_admin)
+class CaregiverOffStudyAdmin(ModelAdminMixin, admin.ModelAdmin):
 
-    form = OffStudyForm
+    form = CareegiverOffStudyForm
 
     search_fields = ('subject_identifier',)
 
@@ -54,5 +54,9 @@ class OffStudyAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'offstudy_date',
                 'reason',
                 'reason_other',
+                'offstudy_point',
                 'comment']}
          ), audit_fieldset_tuple)
+
+    radio_fields = {'reason': admin.VERTICAL,
+                    'offstudy_point': admin.VERTICAL}
