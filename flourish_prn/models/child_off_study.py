@@ -35,8 +35,8 @@ class ChildOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
                    ' the date/time this information was reported.'))
 
     reason = models.CharField(
-        verbose_name=('Please code the primary reason participant taken'
-                      ' off-study'),
+        verbose_name=('Please code the primary reason the participant is'
+                      ' being taken off the study'),
         max_length=115,
         choices=CHILD_OFF_STUDY_REASON)
 
