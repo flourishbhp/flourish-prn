@@ -19,7 +19,7 @@ from .offstudy_model_mixin import OffStudyModelMixin
 class CaregiverOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
                         ActionModelMixin, BaseUuidModel):
 
-    tracking_identifier_prefix = 'CGO'
+    tracking_identifier_prefix = 'MO'
 
     action_name = CAREGIVEROFF_STUDY_ACTION
 
@@ -52,18 +52,19 @@ class CaregiverOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
     def take_off_schedule(self):
         cohorts = ['cohorta', 'cohortb', 'cohortc', 'pool']
 
-        for cohort in cohorts:
-            onschedule_model = 'flourish_child.onschedule' + cohort
-            onschedule_model_cls = django_apps.get_model(onschedule_model)
-            on_schedule_objs = onschedule_model_cls.objects.filter(
-                subject_identifier=self.subject_identifier)
-            if on_schedule_objs:
-                for on_schedule_obj in on_schedule_objs:
-                    _, schedule = \
-                        site_visit_schedules.get_by_onschedule_model_schedule_name(
-                            onschedule_model=onschedule_model_cls._meta.label_lower,
-                            name=on_schedule_obj.schedule_name)
-                    schedule.take_off_schedule(offschedule_model_obj=self)
+        for i in range(1, 3):
+            for cohort in cohorts:
+                onschedule_model = f'flourish_caregiver.onschedule{cohort}{i}'
+                onschedule_model_cls = django_apps.get_model(onschedule_model)
+                on_schedule_objs = onschedule_model_cls.objects.filter(
+                    subject_identifier=self.subject_identifier)
+                if on_schedule_objs:
+                    for on_schedule_obj in on_schedule_objs:
+                        _, schedule = \
+                            site_visit_schedules.get_by_onschedule_model_schedule_name(
+                                onschedule_model=onschedule_model_cls._meta.label_lower,
+                                name=on_schedule_obj.schedule_name)
+                        schedule.take_off_schedule(offschedule_model_obj=self)
 
     class Meta:
         app_label = 'flourish_prn'

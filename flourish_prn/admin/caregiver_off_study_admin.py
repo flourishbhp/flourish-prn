@@ -12,7 +12,7 @@ from edc_model_admin import audit_fieldset_tuple
 from edc_subject_dashboard import ModelAdminSubjectDashboardMixin
 
 from ..admin_site import flourish_prn_admin
-from ..forms import CareegiverOffStudyForm
+from ..forms import CaregiverOffStudyForm
 from ..models import CaregiverOffStudy
 from .exportaction_mixin import ExportActionMixin
 
@@ -42,7 +42,7 @@ class ModelAdminMixin(ModelAdminNextUrlRedirectMixin,
 @admin.register(CaregiverOffStudy, site=flourish_prn_admin)
 class CaregiverOffStudyAdmin(ModelAdminMixin, admin.ModelAdmin):
 
-    form = CareegiverOffStudyForm
+    form = CaregiverOffStudyForm
 
     search_fields = ('subject_identifier',)
 
