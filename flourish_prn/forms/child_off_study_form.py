@@ -33,7 +33,7 @@ class ChildOffStudyForm(FormValidatorMixin, ChildFormValidatorMixin,
             'flourish_child.childdummysubjectconsent')
         try:
             dummy_consent = dummy_consent_model_cls.objects.get(
-                subject_identifier=self.infant_identifier).latest('consent_datetime')
+                subject_identifier=self.infant_identifier)
         except dummy_consent_model_cls.DoesNotExist:
             raise ValidationError('Dummy Consent does not exist.')
         else:
