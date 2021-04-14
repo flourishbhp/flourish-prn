@@ -1,6 +1,15 @@
 from edc_constants.constants import OTHER
 
 
+CAUSE_OF_DEATH_CAT = (
+    ('hiv_related', 'HIV infection or HIV related diagnosis'),
+    ('hiv_unrelated', 'Disease unrelated to HIV'),
+    ('study_drug', 'Toxicity from Study Drug'),
+    ('non_study_drug', 'Toxicity from non-Study drug'),
+    ('trauma', 'Trauma/Accident'),
+    ('no_info', 'No information available'),
+    (OTHER, 'Other, specify'),)
+
 CAREGIVER_OFF_STUDY_REASON = (
     ('multiple_vialble_gestations',
      'Multiple (2 or more) viable gestations seen on ultrasound'),
@@ -71,7 +80,59 @@ CHILD_OFF_STUDY_REASON = (
     (OTHER, ' Other'),
 )
 
+HOSPITILIZATION_REASONS = (
+    ('respiratory illness(unspecified)', 'Respiratory Illness(unspecified)'),
+    ('respiratory illness, cxr confirmed',
+     'Respiratory Illness, CXR confirmed'),
+    ('respiratory illness, cxr confirmed, bacterial pathogen, specify',
+     'Respiratory Illness, CXR confirmed, bacterial pathogen, specify'),
+    ('respiratory illness, cxr confirmed, tb or probable tb',
+     'Respiratory Illness, CXR confirmed, TB or probable TB'),
+    ('diarrhea illness(unspecified)', 'Diarrhea Illness(unspecified)'),
+    ('diarrhea illness, viral or bacterial pathogen, specify',
+     'Diarrhea Illness, viral or bacterial pathogen, specify'),
+    ('sepsis(unspecified)', 'Sepsis(unspecified)'),
+    ('sepsis, pathogen specified, specify',
+     'Sepsis, pathogen specified, specify'),
+    ('mengitis(unspecified)', 'Mengitis(unspecified)'),
+    ('mengitis, pathogen specified, specify',
+     'Mengitis, pathogen specified, specify'),
+    ('non-infectious reason for hospitalization, specify',
+     'Non-infectious reason for hospitalization, specify'),
+    (OTHER, 'Other infection, specify'),
+)
+
+MED_RESPONSIBILITY = (
+    ('doctor', 'Doctor'),
+    ('nurse', 'Nurse'),
+    ('traditional', 'Traditional Healer'),
+    ('all', 'Both Doctor or Nurse and Traditional Healer'),
+    ('none', 'No known medical care received (family/friends only)'),)
+
 OFFSTUDY_POINT = (
     ('prior_to_del', 'Prior to Delivery'),
     ('post_del', 'Post Delivery'),
 )
+
+RELATIONSHIP_CHOICES = (
+    ('not_related', 'Not related'),
+    ('probably_not_related', 'Probably not related'),
+    ('possibly_related', 'Possibly related'),
+    ('probably_related', 'Probably related'),
+    ('definitely_related', 'Definitely related'),
+)
+
+SOURCE_OF_DEATH_INFO = (
+    ('autopsy', 'Autopsy'),
+    ('clinical_records', 'Clinical_records'),
+    ('study_staff',
+     'Information from study care taker staff prior participant death'),
+    ('health_care_provider',
+     'Contact with other (non-study) physician/nurse/other health care provider'),
+    ('death_certificate', 'Death Certificate'),
+    ('relatives_friends',
+     'Information from participant\'s relatives or friends'),
+    ('obituary', 'Obituary'),
+    ('pending_information', 'Information requested, still pending'),
+    ('no_info', 'No information will ever be available'),
+    (OTHER, 'Other, specify'),)
