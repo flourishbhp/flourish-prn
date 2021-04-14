@@ -46,7 +46,10 @@ class ChildOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
 
     def take_off_schedule(self):
 
-        cohorts = ['cohorta', 'cohortb', 'cohortc', 'pool']
+        cohorts = ['cohortaenrollment', 'cohortabirth', 'cohortaquarterly',
+                   'cohortbenrollment', 'cohortbquarterly',
+                   'cohortcenrollment', 'cohortcquarterly', 'cohortcpool',
+                   'dyada', 'dyadb', 'dyadc']
 
         for cohort in cohorts:
             onschedule_model = 'flourish_child.onschedulechild' + cohort

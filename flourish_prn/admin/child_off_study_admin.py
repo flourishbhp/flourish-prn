@@ -30,7 +30,7 @@ class ModelAdminMixin(ModelAdminNextUrlRedirectMixin,
     date_hierarchy = 'modified'
     empty_value_display = '-'
     next_form_getter_cls = NextFormGetter
-    subject_dashboard_url = 'child_subject_dashboard_url'
+    subject_dashboard_url = 'child_dashboard_url'
 
     post_url_on_delete_name = settings.DASHBOARD_URL_NAMES.get(
         subject_dashboard_url)
