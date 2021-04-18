@@ -61,7 +61,8 @@ class CaregiverOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
                     site_visit_schedules.get_by_onschedule_model_schedule_name(
                         onschedule_model=onschedule._meta.label_lower,
                         name=onschedule.schedule_name)
-                schedule.take_off_schedule(offschedule_model_obj=self)
+                schedule.take_off_schedule(
+                    subject_identifier=self.subject_identifier)
 
     class Meta:
         app_label = 'flourish_prn'
