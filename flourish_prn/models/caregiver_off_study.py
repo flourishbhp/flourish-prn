@@ -52,14 +52,14 @@ class CaregiverOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
     def take_off_schedule(self):
         history_model = 'edc_visit_schedule.subjectschedulehistory'
         history_cls = django_apps.get_model(history_model)
-        onschedules = history_cls.onschedules(
+        onschedules = history_cls.objects.onschedules(
             subject_identifier=self.subject_identifier)
 
         if onschedules:
             for onschedule in onschedules:
                 _, schedule = \
                     site_visit_schedules.get_by_onschedule_model_schedule_name(
-                        onschedule_model=type(onschedule),
+                        onschedule_model=onschedule._meta.label_lower,
                         name=onschedule.schedule_name)
                 schedule.take_off_schedule(offschedule_model_obj=self)
 
