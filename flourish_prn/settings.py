@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import sys
 import os
 from pathlib import Path
 
@@ -17,6 +18,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 APP_NAME = 'flourish_prn'
 
 ETC_DIR = os.path.join(BASE_DIR, 'etc')
+
+# AUTO_CREATE_KEYS = True
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -43,9 +46,20 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_crypto_fields.apps.AppConfig',
     'edc_action_item.apps.AppConfig',
-    'flourish_prn.apps.AppConfig',
-    'edc_timepoint.apps.AppConfig',
-    'flourish_prn.apps.EdcAppointmentAppConfig'
+    'edc_consent.apps.AppConfig',
+    'edc_device.apps.AppConfig',
+    'edc_identifier.apps.AppConfig',
+    'edc_protocol.apps.AppConfig',
+    'edc_registration.apps.AppConfig',
+    'edc_visit_schedule.apps.AppConfig',
+    'flourish_caregiver.apps.AppConfig',
+    'flourish_child.apps.AppConfig',
+    'flourish_visit_schedule.apps.AppConfig',
+    'flourish_prn.apps.EdcTimepointAppConfig',
+    'flourish_prn.apps.EdcVisitTrackingAppConfig',
+    'flourish_prn.apps.EdcAppointmentAppConfig',
+    'flourish_prn.apps.EdcFacilityAppConfig',
+    'flourish_prn.apps.AppConfig'
 ]
 
 MIDDLEWARE = [
@@ -114,14 +128,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
+COUNTRY = 'botswana'
+HOLIDAY_FILE = os.path.join(BASE_DIR, 'holidays.csv')
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Gaborone'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
@@ -132,3 +148,18 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 DASHBOARD_URL_NAMES = {}
+
+if 'test' in sys.argv:
+
+    class DisableMigrations:
+
+        def __contains__(self, item):
+            return True
+
+        def __getitem__(self, item):
+            return None
+
+    MIGRATION_MODULES = DisableMigrations()
+    PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',)
+    DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'
+
