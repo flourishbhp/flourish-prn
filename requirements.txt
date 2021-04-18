@@ -32,3 +32,5 @@ git+https://github.com/flourishbhp/flourish-child.git@develop#egg=flourish_child
 git+https://github.com/flourishbhp/flourish-child-validations.git@develop#egg=flourish_child_validations
 git+https://github.com/flourishbhp/flourish-form-validations.git@develop#egg=flourish_form_validations
 git+https://github.com/flourishbhp/flourish-visit-schedule.git@develop#egg=flourish_visit_schedule
+xlwt
+django_q
