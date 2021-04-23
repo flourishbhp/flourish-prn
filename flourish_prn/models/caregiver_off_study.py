@@ -54,7 +54,6 @@ class CaregiverOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
         history_cls = django_apps.get_model(history_model)
         onschedules = history_cls.objects.onschedules(
             subject_identifier=self.subject_identifier)
-
         if onschedules:
             for onschedule in onschedules:
                 _, schedule = \
