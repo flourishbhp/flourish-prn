@@ -45,24 +45,18 @@ class ChildOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
     history = HistoricalRecords()
 
     def take_off_schedule(self):
-
-        cohorts = ['cohortaenrollment', 'cohortabirth', 'cohortaquarterly',
-                   'cohortbenrollment', 'cohortbquarterly',
-                   'cohortcenrollment', 'cohortcquarterly', 'cohortcpool',
-                   'dyada', 'dyadb', 'dyadc']
-
-        for cohort in cohorts:
-            onschedule_model = 'flourish_child.onschedulechild' + cohort
-            onschedule_model_cls = django_apps.get_model(onschedule_model)
-            on_schedule_objs = onschedule_model_cls.objects.filter(
-                subject_identifier=self.subject_identifier)
-            if on_schedule_objs:
-                for on_schedule_obj in on_schedule_objs:
-                    _, schedule = \
-                        site_visit_schedules.get_by_onschedule_model_schedule_name(
-                            onschedule_model=onschedule_model_cls._meta.label_lower,
-                            name=on_schedule_obj.schedule_name)
-                    schedule.take_off_schedule(offschedule_model_obj=self)
+        history_model = 'edc_visit_schedule.subjectschedulehistory'
+        history_cls = django_apps.get_model(history_model)
+        onschedules = history_cls.objects.onschedules(
+            subject_identifier=self.subject_identifier)
+        if onschedules:
+            for onschedule in onschedules:
+                _, schedule = \
+                    site_visit_schedules.get_by_onschedule_model_schedule_name(
+                        onschedule_model=onschedule._meta.label_lower,
+                        name=onschedule.schedule_name)
+                schedule.take_off_schedule(
+                    subject_identifier=self.subject_identifier)
 
     class Meta:
         app_label = 'flourish_prn'
