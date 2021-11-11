@@ -50,7 +50,7 @@ CAREGIVER_OFF_STUDY_REASON = (
      '(see Study Protocol for definition of "Completion") (skip to end of form)'),
     ('enrolled_erroneously',
      'Enrolled erroneously – did not meet eligibility criteria prior to consent prior to consent'),
-     ('Did not meet eligibility criteria, after consent obtained'),
+     ('in_eligible','Did not meet eligibility criteria, after consent obtained'),
     ('incarcerated',
      'Participant is incarcerated'),
     (OTHER, 'Other'),
