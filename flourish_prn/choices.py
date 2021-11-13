@@ -49,7 +49,8 @@ CAREGIVER_OFF_STUDY_REASON = (
      'Completion of protocol required period of time for observation '
      '(see Study Protocol for definition of "Completion") (skip to end of form)'),
     ('enrolled_erroneously',
-     'Enrolled erroneously – did not meet eligibility criteria'),
+     'Enrolled erroneously – did not meet eligibility criteria prior to consent'),
+     ('in_eligible','Did not meet eligibility criteria, after consent obtained'),
     ('incarcerated',
      'Participant is incarcerated'),
     (OTHER, 'Other'),
@@ -76,6 +77,9 @@ CHILD_OFF_STUDY_REASON = (
      (' Completion of protocol required period of time for observation'
       ' (see Study Protocol for definition of Completion.)'
       ' [skip to end of form]')),
+    ('enrolled_erroneously',
+     'Enrolled erroneously – did not meet eligibility criteria prior to consent'),
+     ('in_eligible','Did not meet eligibility criteria, after consent obtained'),
     ('incarcerated', 'Adolescent is incarcerated'),
     (OTHER, ' Other'),
 )
