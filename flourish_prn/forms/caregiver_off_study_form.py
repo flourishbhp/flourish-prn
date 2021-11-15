@@ -9,7 +9,7 @@ from ..models import CaregiverOffStudy
 
 
 class CaregiverOffStudyForm(FormValidatorMixin, FlourishFormValidatorMixin,
-                             forms.ModelForm):
+                            forms.ModelForm):
 
     OffstudyFormValidator.visit_model = 'flourish_caregiver.maternalvisit'
 
@@ -27,30 +27,6 @@ class CaregiverOffStudyForm(FormValidatorMixin, FlourishFormValidatorMixin,
         super().clean()
         self.validate_against_consent_datetime(
             self.cleaned_data.get('report_datetime'))
-
-        offstudy_point = self.cleaned_data.get('offstudy_point')
-
-        if self.preg_women_screening and not offstudy_point:
-            message = {'offstudy_point': 'This field is required.'}
-            raise forms.ValidationError(message)
-        elif not self.preg_women_screening and offstudy_point:
-            message = {'offstudy_point': 'This field is not required.'}
-            raise forms.ValidationError(message)
-
-    @property
-    def preg_women_screening_cls(self):
-        return django_apps.get_model(self.preg_women_screening_model)
-
-    @property
-    def preg_women_screening(self):
-        try:
-            self.preg_women_screening_cls.objects.get(
-                subject_identifier=self.subject_identifier)
-        except self.preg_women_screening_cls.DoesNotExist:
-            return False
-        else:
-            return True
-
     class Meta:
         model = CaregiverOffStudy
         fields = '__all__'

@@ -9,7 +9,9 @@ from edc_action_item.model_mixins.action_model_mixin import ActionModelMixin
 
 
 class DeathReport(ActionModelMixin,
-                          SiteModelMixin, SearchSlugModelMixin, BaseUuidModel):
+                        SiteModelMixin,
+                        SearchSlugModelMixin,
+                        BaseUuidModel):
 
     objects = SubjectIdentifierManager()
 
