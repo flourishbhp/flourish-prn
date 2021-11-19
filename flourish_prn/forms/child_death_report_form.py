@@ -2,10 +2,10 @@ from django import forms
 from edc_form_validators import FormValidatorMixin
 from flourish_form_validations.form_validators.form_validator_mixin import (
     FlourishFormValidatorMixin)
-from ..models import DeathReport
+from ..models import ChildDeathReport
 
 
-class DeathReportForm(FormValidatorMixin, FlourishFormValidatorMixin, forms.ModelForm):
+class ChildDeathReportForm(FormValidatorMixin, FlourishFormValidatorMixin, forms.ModelForm):
 
     subject_identifier = forms.CharField(
         label='Subject Identifier',
@@ -19,5 +19,5 @@ class DeathReportForm(FormValidatorMixin, FlourishFormValidatorMixin, forms.Mode
         super().clean()
 
     class Meta:
-        model = DeathReport
+        model = ChildDeathReport
         fields = '__all__'

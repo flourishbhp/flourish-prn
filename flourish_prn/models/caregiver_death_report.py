@@ -9,26 +9,19 @@ from edc_identifier.managers import SubjectIdentifierManager
 from edc_protocol.validators import datetime_not_before_study_start
 from edc_search.model_mixins import SearchSlugModelMixin
 
-from ..action_items import DEATH_REPORT_ACTION
+from ..action_items import CAREGIVER_DEATH_REPORT_ACTION
+from .death_report_mixin import DeathReportModelMixin
 
 
-class DeathReport(ActionModelMixin,
+class CaregiverDeathReport(DeathReportModelMixin,
+                        ActionModelMixin,
                         SiteModelMixin,
                         SearchSlugModelMixin,
                         BaseUuidModel):
 
     tracking_identifier_prefix = 'MO'
 
-    action_name = DEATH_REPORT_ACTION
-
-    report_datetime = models.DateTimeField(
-        verbose_name="Report Date",
-        validators=[
-            datetime_not_before_study_start,
-            datetime_not_future],
-        default=get_utcnow,
-        help_text=('If reporting today, use today\'s date/time, otherwise use'
-                   ' the date/time this information was reported.'))
+    action_name = CAREGIVER_DEATH_REPORT_ACTION
 
     objects = SubjectIdentifierManager()
 
