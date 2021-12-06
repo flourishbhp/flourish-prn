@@ -1,6 +1,7 @@
 from django import forms
 from django.apps import apps as django_apps
 from edc_form_validators import FormValidator
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class OffstudyFormValidator(FormValidator):
@@ -24,11 +25,16 @@ class OffstudyFormValidator(FormValidator):
     def validate_preg_subcohotA(self):
         subject_identifier = self.cleaned_data.get('subject_identifier')
         offstudy_point = self.cleaned_data.get('offstudy_point')
-        antenantal_enrollment = self.antenantal_enrollment_model_cls.objects.get(subject_identifier=subject_identifier)
-        if antenantal_enrollment and offstudy_point == None:
-            raise forms.ValidationError({
-                    'offstudy_point': 'Question 6 required for pregnant women'
-                })
+        try:
+            antenantal_enrollment = self.antenantal_enrollment_model_cls.objects.get(subject_identifier=subject_identifier)
+        except ObjectDoesNotExist:
+            pass
+        else:
+            if antenantal_enrollment and offstudy_point == None:
+                raise forms.ValidationError({
+                        'offstudy_point': 'Question 6 required for pregnant women'
+                    })
+        
 
 
     def validate_against_latest_visit(self):
