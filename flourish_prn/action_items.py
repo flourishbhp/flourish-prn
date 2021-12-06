@@ -1,4 +1,6 @@
 from edc_action_item import Action, site_action_items, HIGH_PRIORITY
+from django.apps import apps as django_apps
+from django.core.exceptions import ObjectDoesNotExist
 
 CAREGIVEROFF_STUDY_ACTION = 'submit-caregiveroff-study'
 CHILDOFF_STUDY_ACTION = 'submit-childoff-study'
@@ -22,6 +24,28 @@ class ChildOffStudyAction(Action):
     admin_site_name = 'flourish_prn_admin'
     priority = HIGH_PRIORITY
     singleton = True
+    
+    def get_next_actions(self):
+        actions = []
+        offstudy = None
+        child_deathreport_cls = django_apps.get_model(
+            'flourish_prn.childdeathreport')
+
+        action_item_cls = django_apps.get_model(
+            'edc_action_item.actionitem')
+
+        subject_identifier = self.reference_model_obj.subject_identifier
+        offstudy = action_item_cls.objects.filter(
+            subject_identifier=subject_identifier,
+            action_type__name=CHILD_DEATH_REPORT_ACTION)
+        try:
+            child_deathreport_cls.objects.get(
+                subject_identifier=subject_identifier)
+            if not offstudy:
+                actions = [ChildOffStudyAction]
+        except ObjectDoesNotExist:
+            pass
+        return actions
 
 
 class CaregiverDeathReportAction(Action):
@@ -31,6 +55,28 @@ class CaregiverDeathReportAction(Action):
     admin_site_name = 'flourish_prn_admin'
     priority = HIGH_PRIORITY
     singleton = True
+    
+    def get_next_actions(self):
+        actions = []
+        offstudy = None
+        caregiver_deathreport_cls = django_apps.get_model(
+            'flourish_prn.caregiverdeathreport')
+
+        action_item_cls = django_apps.get_model(
+            'edc_action_item.actionitem')
+
+        subject_identifier = self.reference_model_obj.subject_identifier
+        offstudy = action_item_cls.objects.filter(
+            subject_identifier=subject_identifier,
+            action_type__name=CAREGIVEROFF_STUDY_ACTION)
+        try:
+            caregiver_deathreport_cls.objects.get(
+                subject_identifier=subject_identifier)
+            if not offstudy:
+                actions = [CaregiverOffStudyAction]
+        except ObjectDoesNotExist:
+            pass
+        return actions
 
 
 class ChildDeathReportAction(Action):
