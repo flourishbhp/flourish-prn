@@ -34,12 +34,12 @@ class OffStudyModelMixin(models.Model):
 
         try:
             subject_screening_obj = preg_subject_screening_cls.objects.get(
-                subject_identifier=self.subject_identifier)
+                subject_identifier__startswith=self.subject_identifier)
         except preg_subject_screening_cls.DoesNotExist:
 
             try:
                 subject_screening_obj = prior_subject_screening_cls.objects.get(
-                    subject_identifier=self.subject_identifier)
+                    subject_identifier__startswith=self.subject_identifier)
             except prior_subject_screening_cls.DoesNotExist:
                 raise ValidationError(
                     'Missing Subject Screening form. Please complete '
