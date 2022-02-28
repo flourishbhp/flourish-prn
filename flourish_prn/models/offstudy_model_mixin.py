@@ -1,5 +1,5 @@
+from django import forms
 from django.apps import apps as django_apps
-from django.core.exceptions import ValidationError
 from django.db import models
 from edc_base.model_fields.custom_fields import OtherCharField
 from edc_base.model_validators import date_not_future
@@ -42,7 +42,7 @@ class OffStudyModelMixin(models.Model):
                 subject_screening_obj = prior_subject_screening_cls.objects.get(
                     subject_identifier__startswith=self.subject_identifier)
             except prior_subject_screening_cls.DoesNotExist:
-                raise ValidationError(
+                raise forms.ValidationError(
                     'Missing Subject Screening form. Please complete '
                     'it before proceeding.')
 
@@ -51,7 +51,7 @@ class OffStudyModelMixin(models.Model):
                 consent_version_obj = consent_version_cls.objects.get(
                     screening_identifier=subject_screening_obj.screening_identifier)
             except consent_version_cls.DoesNotExist:
-                raise ValidationError(
+                raise forms.ValidationError(
                     'Missing Consent Version form. Please complete '
                     'it before proceeding.')
             return consent_version_obj.version
