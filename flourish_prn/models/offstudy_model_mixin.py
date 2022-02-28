@@ -1,4 +1,5 @@
 from django.apps import apps as django_apps
+from django.core.exceptions import ValidationError
 from django.db import models
 from edc_base.model_fields.custom_fields import OtherCharField
 from edc_base.model_validators import date_not_future
