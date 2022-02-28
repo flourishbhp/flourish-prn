@@ -1,15 +1,14 @@
-from django.apps import apps as django_apps
 from django import forms
+from django.apps import apps as django_apps
 from edc_form_validators import FormValidatorMixin
-from flourish_form_validations.form_validators.form_validator_mixin import (
-    FlourishFormValidatorMixin)
+
+from flourish_form_validations.form_validators import FormValidatorMixin as FlourishFormValidatorMixin
 
 from ..form_validations import OffstudyFormValidator
 from ..models import CaregiverOffStudy
 
 
-class CaregiverOffStudyForm(FormValidatorMixin, FlourishFormValidatorMixin,
-                            forms.ModelForm):
+class CaregiverOffStudyForm(FlourishFormValidatorMixin, FormValidatorMixin, forms.ModelForm):
 
     OffstudyFormValidator.visit_model = 'flourish_caregiver.maternalvisit'
 
@@ -27,6 +26,7 @@ class CaregiverOffStudyForm(FormValidatorMixin, FlourishFormValidatorMixin,
         super().clean()
         self.validate_against_consent_datetime(
             self.cleaned_data.get('report_datetime'))
+
     class Meta:
         model = CaregiverOffStudy
         fields = '__all__'
