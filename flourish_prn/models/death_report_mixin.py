@@ -124,15 +124,18 @@ class DeathReportModelMixin(models.Model):
             'flourish_caregiver.flourishconsentversion')
 
         subject_screening_obj = None
+        subject_identifier = self.subject_identifier
+        if len(self.subject_identifier.split('-')) == 4:
+            subject_identifier = self.subject_identifier[:-3]
 
         try:
             subject_screening_obj = preg_subject_screening_cls.objects.get(
-                subject_identifier__startswith=self.subject_identifier)
+                subject_identifier=subject_identifier)
         except preg_subject_screening_cls.DoesNotExist:
 
             try:
                 subject_screening_obj = prior_subject_screening_cls.objects.get(
-                    subject_identifier__startswith=self.subject_identifier)
+                    subject_identifier=subject_identifier)
             except prior_subject_screening_cls.DoesNotExist:
                 raise ValidationError(
                     'Missing Subject Screening form. Please complete '

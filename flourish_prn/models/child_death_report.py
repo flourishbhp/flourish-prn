@@ -47,18 +47,6 @@ class ChildDeathReport(DeathReportModelMixin, ActionModelMixin,
 
     history = HistoricalRecords()
 
-    def get_consent_version(self):
-        consent_version_cls = django_apps.get_model(
-            'flourish.flourishconsentversion')
-        try:
-            consent_version_obj = consent_version_cls.objects.get(
-                screening_identifier=self.subject_identifier)
-        except consent_version_cls.DoesNotExist:
-            raise ValidationError(
-                'Missing Consent Version form. Please complete '
-                'it before proceeding.')
-        return consent_version_obj.version
-
     class Meta:
         app_label = 'flourish_prn'
         verbose_name = 'Child Death Report'
