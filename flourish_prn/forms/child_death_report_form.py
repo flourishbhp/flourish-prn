@@ -1,10 +1,10 @@
 from django import forms
-from edc_form_validators import FormValidatorMixin
-from flourish_form_validations.form_validators.form_validator_mixin import (
-    FlourishFormValidatorMixin)
-from ..models import ChildDeathReport
 from django.core.exceptions import ValidationError
+from edc_form_validators import FormValidatorMixin
 
+from flourish_form_validations.form_validators import FormValidatorMixin as FlourishFormValidatorMixin
+
+from ..models import ChildDeathReport
 
 
 class ChildDeathReportForm(FormValidatorMixin, FlourishFormValidatorMixin, forms.ModelForm):

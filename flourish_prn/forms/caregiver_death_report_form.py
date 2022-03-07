@@ -1,7 +1,6 @@
 from django import forms
 from edc_form_validators import FormValidatorMixin
-from flourish_form_validations.form_validators.form_validator_mixin import (
-    FlourishFormValidatorMixin)
+from flourish_form_validations.form_validators import FormValidatorMixin as FlourishFormValidatorMixin
 from ..models import CaregiverDeathReport
 
 
