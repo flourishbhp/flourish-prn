@@ -31,15 +31,12 @@ class ChildDeathReportAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'reason_hospitalized',
                 'reason_hospitalized_other',
                 'days_hospitalized',
-                'study_drug_relationship',
-                'infant_nvp_relationship',
                 'haart_relationship',
                 'trad_med_relationship',
                 'comment',
                 ]}
          ), audit_fieldset_tuple)
-    
-    
+
     radio_fields = {
         'reason_hospitalized': admin.VERTICAL,
         'medical_responsibility': admin.VERTICAL,
@@ -47,8 +44,6 @@ class ChildDeathReportAdmin(ModelAdminMixin, admin.ModelAdmin):
         'cause_category': admin.VERTICAL,
         'perform_autopsy': admin.VERTICAL,
         'participant_hospitalized': admin.VERTICAL,
-        'study_drug_relationship': admin.VERTICAL,
-        'infant_nvp_relationship': admin.VERTICAL,
         'haart_relationship': admin.VERTICAL,
         'trad_med_relationship': admin.VERTICAL
     }
