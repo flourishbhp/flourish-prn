@@ -21,18 +21,6 @@ class ChildDeathReport(DeathReportModelMixin, ActionModelMixin,
 
     action_name = CHILD_DEATH_REPORT_ACTION
 
-    study_drug_relationship = models.CharField(
-        verbose_name=('Relationship between the infant\'s death and '
-                      '(CTX vs Placebo) '),
-        max_length=20,
-        choices=RELATIONSHIP_CHOICES)
-
-    infant_nvp_relationship = models.CharField(
-        verbose_name=('Relationship between the infant\'s death and '
-                      'infant extended nevirapine prophylaxis '),
-        max_length=20,
-        choices=RELATIONSHIP_CHOICES)
-
     haart_relationship = models.CharField(
         verbose_name=('Relationship between the infant\'s death and '
                       'HAART '),
