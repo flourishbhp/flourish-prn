@@ -1,6 +1,6 @@
-from edc_action_item import Action, site_action_items, HIGH_PRIORITY
 from django.apps import apps as django_apps
 from django.core.exceptions import ObjectDoesNotExist
+from edc_action_item import Action, site_action_items, HIGH_PRIORITY
 
 CAREGIVEROFF_STUDY_ACTION = 'submit-caregiveroff-study'
 CHILDOFF_STUDY_ACTION = 'submit-childoff-study'
@@ -13,6 +13,7 @@ class CaregiverOffStudyAction(Action):
     display_name = 'Submit Caregiver Offstudy'
     reference_model = 'flourish_prn.caregiveroffstudy'
     admin_site_name = 'flourish_prn_admin'
+    show_link_to_add = True
     priority = HIGH_PRIORITY
     singleton = True
 
@@ -22,9 +23,10 @@ class ChildOffStudyAction(Action):
     display_name = 'Submit Child Offstudy'
     reference_model = 'flourish_prn.childoffstudy'
     admin_site_name = 'flourish_prn_admin'
+    show_link_to_add = True
     priority = HIGH_PRIORITY
     singleton = True
-    
+
     def get_next_actions(self):
         actions = []
         offstudy = None
@@ -53,9 +55,10 @@ class CaregiverDeathReportAction(Action):
     display_name = 'Submit Caregiver Death Report'
     reference_model = 'flourish_prn.caregiverdeathreport'
     admin_site_name = 'flourish_prn_admin'
+    show_link_to_add = True
     priority = HIGH_PRIORITY
     singleton = True
-    
+
     def get_next_actions(self):
         actions = []
         offstudy = None
@@ -84,6 +87,7 @@ class ChildDeathReportAction(Action):
     display_name = 'Submit Child Death Report'
     reference_model = 'flourish_prn.childdeathreport'
     admin_site_name = 'flourish_prn_admin'
+    show_link_to_add = True
     priority = HIGH_PRIORITY
     singleton = True
 

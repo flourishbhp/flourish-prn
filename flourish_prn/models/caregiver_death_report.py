@@ -14,8 +14,8 @@ from .death_report_mixin import DeathReportModelMixin
 
 
 class CaregiverDeathReport(DeathReportModelMixin,
-                        ActionModelMixin,
                         SiteModelMixin,
+                        ActionModelMixin,
                         SearchSlugModelMixin,
                         BaseUuidModel):
 
