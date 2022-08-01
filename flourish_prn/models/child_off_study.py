@@ -1,6 +1,5 @@
 from django.apps import apps as django_apps
 from django.db import models
-from edc_action_item.model_mixins.action_model_mixin import ActionModelMixin
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators.date import datetime_not_future
@@ -8,6 +7,7 @@ from edc_base.utils import get_utcnow
 from edc_identifier.managers import SubjectIdentifierManager
 from edc_protocol.validators import datetime_not_before_study_start
 
+from edc_action_item.model_mixins.action_model_mixin import ActionModelMixin
 from edc_visit_schedule.model_mixins import OffScheduleModelMixin
 from edc_visit_schedule.site_visit_schedules import site_visit_schedules
 
@@ -56,7 +56,8 @@ class ChildOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
                         onschedule_model=onschedule._meta.label_lower,
                         name=onschedule.schedule_name)
                 schedule.take_off_schedule(
-                    subject_identifier=self.subject_identifier)
+                    subject_identifier=self.subject_identifier,
+                    offschedule_datetime=self.report_datetime)
 
     class Meta:
         app_label = 'flourish_prn'

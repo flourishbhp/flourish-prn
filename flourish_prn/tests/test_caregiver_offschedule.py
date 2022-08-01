@@ -1,6 +1,8 @@
-from django.apps import apps as django_apps
+from datetime import date
+
 from dateutil.relativedelta import relativedelta
-from django.test import TestCase
+from django.apps import apps as django_apps
+from django.test import TestCase, tag
 from edc_base.utils import get_utcnow
 from edc_constants.constants import YES, NO, NOT_APPLICABLE
 from edc_facility.import_holidays import import_holidays
@@ -8,6 +10,7 @@ from edc_registration.models import RegisteredSubject
 from model_mommy import mommy
 
 
+@tag('os')
 class TestCaregiverOffSchedule(TestCase):
 
     def setUp(self):
@@ -48,23 +51,30 @@ class TestCaregiverOffSchedule(TestCase):
 
         mommy.make_recipe(
             'flourish_child.childdataset',
+            dob=date(2017, 3, 29),
             **self.child_dataset_options)
 
         mommy.make_recipe(
             'flourish_caregiver.screeningpriorbhpparticipants',
-            screening_identifier=maternal_dataset_obj.screening_identifier,)
+            screening_identifier=maternal_dataset_obj.screening_identifier,
+                study_maternal_identifier=maternal_dataset_obj.study_maternal_identifier)
 
         subject_consent = mommy.make_recipe(
             'flourish_caregiver.subjectconsent',
             screening_identifier=maternal_dataset_obj.screening_identifier,
             breastfeed_intent=NOT_APPLICABLE,
+            biological_caregiver=YES,
             **self.options)
 
         mommy.make_recipe(
             'flourish_caregiver.caregiverchildconsent',
             subject_consent=subject_consent,
-            subject_identifier=self.subject_identifier,
-            child_dob=(get_utcnow() - relativedelta(years=5, months=2)).date(),)
+            study_child_identifier='1234',
+            child_dob=(get_utcnow() - relativedelta(years=5, months=4)).date(),)
+
+        mommy.make_recipe(
+                    'flourish_caregiver.caregiverpreviouslyenrolled',
+                    subject_identifier=subject_consent.subject_identifier)
 
         onschedule_cls = django_apps.get_model(
             'flourish_caregiver.onschedulecohortbenrollment')
@@ -74,7 +84,7 @@ class TestCaregiverOffSchedule(TestCase):
 
         mommy.make_recipe(
             'flourish_prn.caregiveroffstudy',
-            subject_identifier=subject_consent.subject_identifier, )
+            subject_identifier=subject_consent.subject_identifier,)
 
         offschedule_cls = django_apps.get_model(
             'flourish_caregiver.caregiveroffschedule')

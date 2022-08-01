@@ -15,12 +15,22 @@ if settings.APP_NAME == 'flourish_prn':
     from edc_appointment.apps import AppConfig as BaseEdcAppointmentAppConfig
     from edc_appointment.appointment_config import AppointmentConfig
     from edc_appointment.constants import COMPLETE_APPT
+    from edc_metadata.apps import AppConfig as BaseEdcMetadataAppConfig
     from edc_facility.apps import AppConfig as BaseEdcFacilityAppConfig
     from edc_timepoint.apps import AppConfig as BaseEdcTimepointAppConfig
     from edc_timepoint.timepoint import Timepoint
     from edc_timepoint.timepoint_collection import TimepointCollection
     from edc_visit_tracking.apps import AppConfig as BaseEdcVisitTrackingAppConfig
     from dateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
+    from edc_visit_tracking.constants import MISSED_VISIT, COMPLETED_PROTOCOL_VISIT
+    from edc_visit_tracking.constants import SCHEDULED, UNSCHEDULED, LOST_VISIT
+    from edc_constants.constants import FAILED_ELIGIBILITY
+
+    class EdcMetadataAppConfig(BaseEdcMetadataAppConfig):
+
+        reason_field = {'flourish_caregiver.maternalvisit': 'reason'}
+        create_on_reasons = [SCHEDULED, UNSCHEDULED, COMPLETED_PROTOCOL_VISIT]
+        delete_on_reasons = [LOST_VISIT, MISSED_VISIT, FAILED_ELIGIBILITY]
 
     class EdcAppointmentAppConfig(BaseEdcAppointmentAppConfig):
         default_appt_type = 'clinic'
