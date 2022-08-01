@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-import sys
 import os
 from pathlib import Path
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,25 +41,33 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django_crypto_fields.apps.AppConfig',
     'edc_action_item.apps.AppConfig',
     'edc_consent.apps.AppConfig',
     'edc_device.apps.AppConfig',
+    'edc_data_manager.apps.AppConfig',
+    'edc_odk.apps.AppConfig',
+    'edc_appointment.apps.AppConfig',
+    'edc_lab.apps.AppConfig',
     'edc_identifier.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
+    'edc_timepoint.apps.AppConfig',
     'edc_registration.apps.AppConfig',
+    'edc_reference.apps.AppConfig',
     'edc_visit_schedule.apps.AppConfig',
     'flourish_caregiver.apps.AppConfig',
     'flourish_child.apps.AppConfig',
+    'flourish_follow.apps.AppConfig',
     'flourish_visit_schedule.apps.AppConfig',
-    'flourish_prn.apps.EdcTimepointAppConfig',
+    'flourish_reference.apps.AppConfig',
     'flourish_prn.apps.EdcVisitTrackingAppConfig',
-    'flourish_prn.apps.EdcAppointmentAppConfig',
+    'flourish_prn.apps.EdcMetadataAppConfig',
     'flourish_prn.apps.EdcFacilityAppConfig',
-    'flourish_prn.apps.AppConfig'
+    'flourish_prn.apps.AppConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -95,7 +103,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'flourish_prn.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -105,7 +112,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -125,7 +131,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 COUNTRY = 'botswana'
@@ -141,6 +146,7 @@ USE_L10N = False
 
 USE_TZ = True
 
+DEFAULT_STUDY_SITE = '40'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
