@@ -53,7 +53,9 @@ class CaregiverOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
         history_model = 'edc_visit_schedule.subjectschedulehistory'
         history_cls = django_apps.get_model(history_model)
         onschedules = history_cls.objects.onschedules(
-            subject_identifier=self.subject_identifier)
+            subject_identifier=self.subject_identifier,
+            report_datetime=self.report_datetime)
+
         if onschedules:
             for onschedule in onschedules:
                 _, schedule = \
@@ -61,7 +63,8 @@ class CaregiverOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
                         onschedule_model=onschedule._meta.label_lower,
                         name=onschedule.schedule_name)
                 schedule.take_off_schedule(
-                    subject_identifier=self.subject_identifier)
+                    subject_identifier=self.subject_identifier,
+                    offschedule_datetime=self.report_datetime)
 
     class Meta:
         app_label = 'flourish_prn'
