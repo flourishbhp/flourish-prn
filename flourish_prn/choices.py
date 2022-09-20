@@ -1,6 +1,5 @@
 from edc_constants.constants import OTHER
 
-
 CAUSE_OF_DEATH_CAT = (
     ('hiv_related', 'HIV infection or HIV related diagnosis'),
     ('hiv_unrelated', 'Disease unrelated to HIV'),
@@ -50,7 +49,7 @@ CAREGIVER_OFF_STUDY_REASON = (
      '(see Study Protocol for definition of "Completion") (skip to end of form)'),
     ('enrolled_erroneously',
      'Enrolled erroneously – did not meet eligibility criteria prior to consent'),
-     ('in_eligible','Did not meet eligibility criteria, after consent obtained'),
+     ('in_eligible', 'Did not meet eligibility criteria, after consent obtained'),
     ('incarcerated',
      'Participant is incarcerated'),
     (OTHER, 'Other'),
@@ -64,6 +63,8 @@ CHILD_OFF_STUDY_REASON = (
     ('lost_no_contact',
      'Participant lost to follow-up, contacted but did not come to study clinic'),
     ('child_withdrew', 'Child/Adolescent changed mind and withdrew consent'),
+    ('withdrew_by_mother',
+     'Mother of the infant/child/adolescent changed mind and withdrew consent'),
     ('withdrew_by_father',
      'Father of the infant/child/adolescent refused to participate and therefore'
      ' participant withdrew consent'),
@@ -79,7 +80,7 @@ CHILD_OFF_STUDY_REASON = (
       ' [skip to end of form]')),
     ('enrolled_erroneously',
      'Enrolled erroneously – did not meet eligibility criteria prior to consent'),
-     ('in_eligible','Did not meet eligibility criteria, after consent obtained'),
+     ('in_eligible', 'Did not meet eligibility criteria, after consent obtained'),
     ('incarcerated', 'Adolescent is incarcerated'),
     (OTHER, ' Other'),
 )
