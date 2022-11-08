@@ -1,5 +1,5 @@
-from django.apps import apps as django_apps
 from django import forms
+from django.apps import apps as django_apps
 from django.core.exceptions import ValidationError
 from edc_form_validators import FormValidatorMixin
 
@@ -9,7 +9,7 @@ from ..form_validations import OffstudyFormValidator
 from ..models import ChildOffStudy
 
 
-class ChildOffStudyForm(FormValidatorMixin, ChildFormValidatorMixin,
+class ChildOffStudyForm(ChildFormValidatorMixin, FormValidatorMixin,
                         forms.ModelForm):
 
     OffstudyFormValidator.visit_model = 'flourish_child.childvisit'
