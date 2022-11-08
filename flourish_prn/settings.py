@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 
 SITE_ID = 40
 REVIEWER_SITE_ID = 41
+DEVICE_ID = 2
+DEVICE_ROLE = ''
 
 # Application definition
 
@@ -50,19 +52,23 @@ INSTALLED_APPS = [
     'edc_device.apps.AppConfig',
     'edc_data_manager.apps.AppConfig',
     'edc_odk.apps.AppConfig',
-    'edc_appointment.apps.AppConfig',
     'edc_lab.apps.AppConfig',
     'edc_identifier.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
     'edc_timepoint.apps.AppConfig',
     'edc_registration.apps.AppConfig',
     'edc_reference.apps.AppConfig',
+    'edc_metadata_rules.apps.AppConfig',
+    'edc_senaite_interface.apps.AppConfig',
     'edc_visit_schedule.apps.AppConfig',
     'flourish_caregiver.apps.AppConfig',
     'flourish_child.apps.AppConfig',
     'flourish_follow.apps.AppConfig',
     'flourish_visit_schedule.apps.AppConfig',
     'flourish_reference.apps.AppConfig',
+    'flourish_metadata_rules.apps.AppConfig',
+    'flourish_labs.apps.AppConfig',
+    'flourish_prn.apps.EdcAppointmentAppConfig',
     'flourish_prn.apps.EdcVisitTrackingAppConfig',
     'flourish_prn.apps.EdcMetadataAppConfig',
     'flourish_prn.apps.EdcFacilityAppConfig',
