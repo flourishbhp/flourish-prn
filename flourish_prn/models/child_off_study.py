@@ -57,7 +57,8 @@ class ChildOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
                         name=onschedule.schedule_name)
                 schedule.take_off_schedule(
                     subject_identifier=self.subject_identifier,
-                    offschedule_datetime=self.report_datetime)
+                    offschedule_datetime=self.report_datetime,
+                    schedule_name=onschedule.schedule_name)
 
     class Meta:
         app_label = 'flourish_prn'
