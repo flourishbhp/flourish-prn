@@ -6,6 +6,7 @@ CAREGIVEROFF_STUDY_ACTION = 'submit-caregiveroff-study'
 CHILDOFF_STUDY_ACTION = 'submit-childoff-study'
 CAREGIVER_DEATH_REPORT_ACTION = 'submit-caregiver-death-report'
 CHILD_DEATH_REPORT_ACTION = 'submit-child-death-report'
+ADOLESCENT_REFERRAL_ACTION = 'submit-tb-referral-adolescent'
 
 
 class CaregiverOffStudyAction(Action):
@@ -91,8 +92,18 @@ class ChildDeathReportAction(Action):
     priority = HIGH_PRIORITY
     singleton = True
 
+class TbAdoscentReferralAction(Action):
+    name = ADOLESCENT_REFERRAL_ACTION
+    display_name = 'Submit TB Referral'
+    reference_model = 'flourish_prn.tbreferaladol'
+    admin_site_name = 'flourish_prn_admin'
+    show_link_to_add = True
+    priority = HIGH_PRIORITY
+    singleton=True
+
 
 site_action_items.register(CaregiverOffStudyAction)
 site_action_items.register(ChildOffStudyAction)
 site_action_items.register(CaregiverDeathReportAction)
 site_action_items.register(ChildDeathReportAction)
+site_action_items.register(TbAdoscentReferralAction)
