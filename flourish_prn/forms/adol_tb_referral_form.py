@@ -7,7 +7,7 @@ from ..form_validations import TbReferralAdolFormValidator
 from ..models import TbReferalAdol
 
 
-class TbReferralAdolForm(FormValidatorMixin, FlourishFormValidatorMixin, forms.ModelForm):
+class TbReferralAdolForm(FlourishFormValidatorMixin, FormValidatorMixin, forms.ModelForm):
 
     form_validator_cls = TbReferralAdolFormValidator
 
