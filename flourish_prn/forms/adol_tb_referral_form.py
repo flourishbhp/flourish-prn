@@ -15,11 +15,6 @@ class TbReferralAdolForm(FormValidatorMixin, FlourishFormValidatorMixin, forms.M
         label='Subject Identifier',
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
-    def clean(self):
-        self.subject_identifier = self.cleaned_data.get('subject_identifier')
-
-        super().clean()
-
     class Meta:
         model = TbReferalAdol
         fields = '__all__'
