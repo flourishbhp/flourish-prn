@@ -49,7 +49,7 @@ CAREGIVER_OFF_STUDY_REASON = (
      '(see Study Protocol for definition of "Completion") (skip to end of form)'),
     ('enrolled_erroneously',
      'Enrolled erroneously – did not meet eligibility criteria prior to consent'),
-     ('in_eligible', 'Did not meet eligibility criteria, after consent obtained'),
+    ('in_eligible', 'Did not meet eligibility criteria, after consent obtained'),
     ('incarcerated',
      'Participant is incarcerated'),
     (OTHER, 'Other'),
@@ -80,7 +80,7 @@ CHILD_OFF_STUDY_REASON = (
       ' [skip to end of form]')),
     ('enrolled_erroneously',
      'Enrolled erroneously – did not meet eligibility criteria prior to consent'),
-     ('in_eligible', 'Did not meet eligibility criteria, after consent obtained'),
+    ('in_eligible', 'Did not meet eligibility criteria, after consent obtained'),
     ('incarcerated', 'Adolescent is incarcerated'),
     (OTHER, ' Other'),
 )
@@ -145,7 +145,7 @@ SOURCE_OF_DEATH_INFO = (
 LOCATION_REFERRAL = (
     ('bontleng', 'Bontleng'),
     ('julia_molefe', 'Julia Molefe'),
-    ('phase_2','Phase 2'),
+    ('phase_2', 'Phase 2'),
     ('bh1', 'BH1'),
     ('bh2', 'BH2'),
     ('bh3', 'BH3'),
@@ -154,5 +154,6 @@ LOCATION_REFERRAL = (
     ('lesirane', 'Lesirane'),
     ('old_naledi', 'Old Naledi'),
     ('g_west', 'G-West'),
-    ('sebele', 'Sebele')
+    ('sebele', 'Sebele'),
+    (OTHER, 'Other, specify'),
 )

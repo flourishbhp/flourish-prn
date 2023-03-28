@@ -34,8 +34,6 @@ class OffstudyFormValidator(FormValidator):
                 raise forms.ValidationError({
                         'offstudy_point': 'Question 6 required for pregnant women'
                     })
-        
-
 
     def validate_against_latest_visit(self):
         self.visit_cls = django_apps.get_model(self.visit_model)
