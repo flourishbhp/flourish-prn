@@ -11,7 +11,6 @@ from ..models import ChildOffStudy
 
 class ChildOffStudyForm(ChildFormValidatorMixin, FormValidatorMixin,
                         forms.ModelForm):
-
     OffstudyFormValidator.visit_model = 'flourish_child.childvisit'
 
     form_validator_cls = OffstudyFormValidator
@@ -32,8 +31,8 @@ class ChildOffStudyForm(ChildFormValidatorMixin, FormValidatorMixin,
         dummy_consent_model_cls = django_apps.get_model(
             'flourish_child.childdummysubjectconsent')
         try:
-            dummy_consent = dummy_consent_model_cls.objects.get(
-                subject_identifier=self.infant_identifier)
+            dummy_consent = dummy_consent_model_cls.objects.filter(
+                subject_identifier=self.infant_identifier).latest('consent_datetime')
         except dummy_consent_model_cls.DoesNotExist:
             raise ValidationError('Dummy Consent does not exist.')
         else:

@@ -1,13 +1,15 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from edc_form_validators import FormValidatorMixin
 
 from flourish_form_validations.form_validators import FormValidatorMixin as FlourishFormValidatorMixin
 
+from ..form_validations import TbReferralAdolFormValidator
 from ..models import TbReferalAdol
 
 
-class TbReferralAdolForm(forms.ModelForm):
+class TbReferralAdolForm(FlourishFormValidatorMixin, FormValidatorMixin, forms.ModelForm):
+
+    form_validator_cls = TbReferralAdolFormValidator
 
     subject_identifier = forms.CharField(
         label='Subject Identifier',

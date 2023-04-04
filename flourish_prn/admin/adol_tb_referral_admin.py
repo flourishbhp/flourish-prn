@@ -1,9 +1,9 @@
 from django.contrib import admin
 from edc_model_admin import audit_fieldset_tuple
+
 from ..admin_site import flourish_prn_admin
 from ..forms import TbReferralAdolForm
 from ..models import TbReferalAdol
-from ..admin_site import flourish_prn_admin
 
 from .modeladmin_mixins import ModelAdminMixin
 
@@ -21,7 +21,8 @@ class TbReferralAdolAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'subject_identifier',
                 'report_datetime',
                 'referral_date',
-                'location']}
+                'location',
+                'location_other']}
          ), audit_fieldset_tuple)
 
-
+    radio_fields = {'location': admin.VERTICAL, }
