@@ -62,5 +62,5 @@ class ChildOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
 
     class Meta:
         app_label = 'flourish_prn'
-        verbose_name = "Child Off-Study"
-        verbose_name_plural = "Child Off-Study"
+        verbose_name = 'Child Off-Study'
+        verbose_name_plural = 'Child Off-Study'

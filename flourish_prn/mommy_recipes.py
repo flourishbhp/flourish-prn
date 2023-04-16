@@ -1,6 +1,6 @@
 from faker import Faker
 from model_mommy.recipe import Recipe
-from .models import CaregiverOffStudy, TbReferalAdol
+from .models import CaregiverOffStudy, TbReferalAdol, ChildOffStudy
 
 fake = Faker()
 
@@ -9,3 +9,5 @@ caregiveroffstudy = Recipe(
 
 tbadolreferral = Recipe(
     TbReferalAdol)
+
+childoffstudy = Recipe(ChildOffStudy)
