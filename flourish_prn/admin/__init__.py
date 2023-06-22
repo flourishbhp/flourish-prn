@@ -4,3 +4,4 @@ from .caregiver_off_study_admin import CaregiverOffStudyAdmin
 from .child_death_report_admin import ChildDeathReportAdmin
 from .child_off_study_admin import ChildOffStudyAdmin
 from .tb_adol_off_study_admin import TBAdolOffStudyAdmin
+from .missed_birth_visit_admin import MissedBirthVisitAdmin
