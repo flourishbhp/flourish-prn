@@ -154,6 +154,8 @@ USE_TZ = True
 
 DEFAULT_STUDY_SITE = '40'
 
+BASE_FORMAT = '%Y-%m-%d'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 

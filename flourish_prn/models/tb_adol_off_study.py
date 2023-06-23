@@ -42,7 +42,8 @@ class TBAdolOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
     history = HistoricalRecords()
 
     def take_off_schedule(self):
-        offschedule_cls = django_apps.get_model('flourish_child.childoffschedule')
+        offschedule_cls = django_apps.get_model(
+            'flourish_child.childoffschedule')
         try:
             offschedule_obj = offschedule_cls.objects.get(
                 subject_identifier=self.subject_identifier,
