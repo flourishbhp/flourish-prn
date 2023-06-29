@@ -6,3 +6,4 @@ from .child_off_study import ChildOffStudy
 from .death_report_mixin import DeathReportModelMixin
 from .signals import tb_referral_adol_on_post_save
 from .tb_adol_off_study import TBAdolOffStudy
+from .missed_birth_visit import MissedBirthVisit
