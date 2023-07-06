@@ -40,6 +40,9 @@ class ChildOffStudyForm(ChildFormValidatorMixin, FormValidatorMixin,
                 raise forms.ValidationError(
                     "Offstudy date cannot be before enrollment datetime.")
 
+    def validate_offstudy_model(self):
+        pass
+
     class Meta:
         model = ChildOffStudy
         fields = '__all__'
