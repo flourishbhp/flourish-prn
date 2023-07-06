@@ -9,8 +9,7 @@ from ..form_validations import OffstudyFormValidator
 from ..models import ChildOffStudy
 
 
-class ChildOffStudyForm(ChildFormValidatorMixin, FormValidatorMixin,
-                        forms.ModelForm):
+class ChildOffStudyForm(FormValidatorMixin, forms.ModelForm):
     OffstudyFormValidator.visit_model = 'flourish_child.childvisit'
 
     form_validator_cls = OffstudyFormValidator
@@ -39,9 +38,6 @@ class ChildOffStudyForm(ChildFormValidatorMixin, FormValidatorMixin,
             if offstudy_date and offstudy_date < dummy_consent.report_datetime.date():
                 raise forms.ValidationError(
                     "Offstudy date cannot be before enrollment datetime.")
-
-    def validate_offstudy_model(self):
-        pass
 
     class Meta:
         model = ChildOffStudy
