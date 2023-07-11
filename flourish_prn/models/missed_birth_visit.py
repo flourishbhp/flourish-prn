@@ -79,8 +79,11 @@ class MissedBirthVisit(BaseUuidModel,ActionModelMixin):
         blank=True,
         null=True)
 
-    gestational_age = models.IntegerField(
-        verbose_name="What is the infant's determined gestational age: ")
+    gestational_age = models.DecimalField(
+        verbose_name="What is the infant's determined gestational age: ",
+        max_digits=8,
+        decimal_places=2,
+        null=True, blank=False)
  
     apgar_score = models.CharField(
         max_length=3,
@@ -116,7 +119,9 @@ class MissedBirthVisit(BaseUuidModel,ActionModelMixin):
     
     congenital_anomalities_info = models.TextField(
         max_length=255,
-        verbose_name="Please add congenital anomalies",)
+        verbose_name="Please add congenital anomalies",
+        blank=True,
+        null=True,)
     
         
     class Meta:
