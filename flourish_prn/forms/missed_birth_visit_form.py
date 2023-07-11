@@ -15,7 +15,7 @@ class MissedBirthVisitForm(FlourishFormValidatorMixin,FormValidatorMixin,forms.M
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     
     @property
-    def ultrasound_model_cls(self):
+    def antenatal_model_cls(self):
         return django_apps.get_model(self.antenatal_enrol_model)
 
 
@@ -29,7 +29,7 @@ class MissedBirthVisitForm(FlourishFormValidatorMixin,FormValidatorMixin,forms.M
         if child_subject_identifier:
             maternal_subject_identifier = child_subject_identifier[:-3]
 
-        antenatal_enrol_obj =self.ultrasound_model_cls.objects.filter(subject_identifier = maternal_subject_identifier).first()
+        antenatal_enrol_obj =self.antenatal_model_cls.objects.filter(subject_identifier = maternal_subject_identifier).first()
         if antenatal_enrol_obj:
             if antenatal_enrol_obj.real_time_ga:
                 self.initial['gestational_age'] = antenatal_enrol_obj.real_time_ga
