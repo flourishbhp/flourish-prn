@@ -1,5 +1,5 @@
 from edc_form_validators import FormValidator
-from edc_constants.constants import YES
+from edc_constants.constants import YES,NO
 from django import forms
 
 
@@ -12,6 +12,13 @@ class MissedBirthVisitFormValidator(FormValidator):
         self.validate_metrics_avail()
         self.validate_apgar_score()
         self.validate_gestational_age()
+
+
+        self.not_required_if(
+           NO,
+           field='congenital_anomalities',
+           field_required="congenital_anomalities_info"
+       )
 
 
     def validate_gestational_age(self):
