@@ -1,4 +1,3 @@
-from django.apps import apps as django_apps
 from django.db import models
 from edc_action_item.model_mixins.action_model_mixin import ActionModelMixin
 from edc_base.model_managers import HistoricalRecords
@@ -42,19 +41,7 @@ class TBAdolOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
     history = HistoricalRecords()
 
     def take_off_schedule(self):
-        offschedule_cls = django_apps.get_model(
-            'flourish_child.childoffschedule')
-        try:
-            offschedule_obj = offschedule_cls.objects.get(
-                subject_identifier=self.subject_identifier,
-                schedule_name='tb_adol_schedule')
-        except offschedule_cls.DoesNotExist:
-            offschedule_cls.objects.create(
-                subject_identifier=self.subject_identifier,
-                schedule_name='tb_adol_schedule',
-                offschedule_datetime=get_utcnow())
-        else:
-            offschedule_obj.save()
+        pass
 
     class Meta:
         app_label = 'flourish_prn'
