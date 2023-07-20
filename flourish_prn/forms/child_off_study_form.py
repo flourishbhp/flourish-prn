@@ -9,8 +9,7 @@ from ..form_validations import OffstudyFormValidator
 from ..models import ChildOffStudy
 
 
-class ChildOffStudyForm(ChildFormValidatorMixin, FormValidatorMixin,
-                        forms.ModelForm):
+class ChildOffStudyForm(FormValidatorMixin, forms.ModelForm):
     OffstudyFormValidator.visit_model = 'flourish_child.childvisit'
 
     form_validator_cls = OffstudyFormValidator
