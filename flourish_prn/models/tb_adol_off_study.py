@@ -17,7 +17,7 @@ class TBAdolOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
                      ActionModelMixin, BaseUuidModel):
     """ A model completed by the user when the child is taken off study. """
 
-    tracking_identifier_prefix = 'CO'
+    tracking_identifier_prefix = 'TO'
 
     action_name = TB_ADOL_STUDY_ACTION
 

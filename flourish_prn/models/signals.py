@@ -15,14 +15,16 @@ def child_offstudy_on_post_save(sender, instance, raw, created, **kwargs):
     """
     schedule_history_cls = django_apps.get_model(
         'edc_visit_schedule.subjectschedulehistory')
-    participant_note_cls = django_apps.get_model('flourish_calendar.participantnote')
+    participant_note_cls = django_apps.get_model(
+        'flourish_calendar.participantnote')
     subject_identifier = instance.subject_identifier
     if not raw:
         fu_notes = participant_note_cls.objects.filter(
             subject_identifier=subject_identifier,
             title='Follow Up Schedule')
         fu_schedule = schedule_history_cls.objects.filter(
-            subject_identifier=subject_identifier, schedule_name__contains='_fu')
+            subject_identifier=subject_identifier,
+            schedule_name__contains='_fu')
 
         if fu_notes.exists() and not fu_schedule.exists():
             fu_notes.delete()
