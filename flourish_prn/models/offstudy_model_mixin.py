@@ -4,6 +4,7 @@ from django.db import models
 from edc_base.model_fields.custom_fields import OtherCharField
 from edc_base.model_validators import date_not_future
 from edc_protocol.validators import date_not_before_study_start
+from flourish_child.helper_classes.utils import child_utils
 
 
 class OffStudyModelMixin(models.Model):
@@ -34,7 +35,8 @@ class OffStudyModelMixin(models.Model):
         subject_screening_obj = None
         subject_identifier = self.subject_identifier
         if len(self.subject_identifier.split('-')) == 4:
-            subject_identifier = self.subject_identifier[:-3]
+            subject_identifier = child_utils.caregiver_subject_identifier(
+                self.subject_identifier)
 
         try:
             subject_screening_obj = preg_subject_screening_cls.objects.get(

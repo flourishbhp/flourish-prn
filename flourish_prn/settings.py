@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     'edc_lab.apps.AppConfig',
     'edc_identifier.apps.AppConfig',
     'edc_protocol.apps.AppConfig',
-    'edc_timepoint.apps.AppConfig',
     'edc_registration.apps.AppConfig',
     'edc_reference.apps.AppConfig',
     'edc_metadata_rules.apps.AppConfig',
@@ -68,10 +67,12 @@ INSTALLED_APPS = [
     'flourish_reference.apps.AppConfig',
     'flourish_metadata_rules.apps.AppConfig',
     'flourish_labs.apps.AppConfig',
+    'flourish_calendar.apps.AppConfig',
     'flourish_prn.apps.EdcAppointmentAppConfig',
-    'flourish_prn.apps.EdcVisitTrackingAppConfig',
-    'flourish_prn.apps.EdcMetadataAppConfig',
     'flourish_prn.apps.EdcFacilityAppConfig',
+    'flourish_prn.apps.EdcMetadataAppConfig',
+    'flourish_prn.apps.EdcTimepointAppConfig',
+    'flourish_prn.apps.EdcVisitTrackingAppConfig',
     'flourish_prn.apps.AppConfig',
 
 ]
@@ -153,6 +154,8 @@ USE_L10N = False
 USE_TZ = True
 
 DEFAULT_STUDY_SITE = '40'
+
+BASE_FORMAT = '%Y-%m-%d'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/

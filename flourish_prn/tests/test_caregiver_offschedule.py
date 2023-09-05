@@ -4,9 +4,8 @@ from dateutil.relativedelta import relativedelta
 from django.apps import apps as django_apps
 from django.test import TestCase, tag
 from edc_base.utils import get_utcnow
-from edc_constants.constants import YES, NO, NOT_APPLICABLE
+from edc_constants.constants import YES, NOT_APPLICABLE
 from edc_facility.import_holidays import import_holidays
-from edc_registration.models import RegisteredSubject
 from model_mommy import mommy
 
 

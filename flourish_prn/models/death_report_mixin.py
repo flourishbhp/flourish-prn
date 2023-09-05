@@ -10,6 +10,7 @@ from edc_base.model_validators import datetime_not_future
 from edc_base.utils import get_utcnow
 from edc_constants.choices import YES_NO
 from edc_protocol.validators import datetime_not_before_study_start
+from flourish_child.helper_classes.utils import child_utils
 
 from ..choices import MED_RESPONSIBILITY, HOSPITILIZATION_REASONS
 from ..choices import SOURCE_OF_DEATH_INFO, CAUSE_OF_DEATH_CAT
@@ -126,7 +127,8 @@ class DeathReportModelMixin(models.Model):
         subject_screening_obj = None
         subject_identifier = self.subject_identifier
         if len(self.subject_identifier.split('-')) == 4:
-            subject_identifier = self.subject_identifier[:-3]
+            subject_identifier = child_utils.caregiver_subject_identifier(
+                self.subject_identifier)
 
         try:
             subject_screening_obj = preg_subject_screening_cls.objects.get(
