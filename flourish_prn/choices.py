@@ -52,6 +52,8 @@ CAREGIVER_OFF_STUDY_REASON = (
     ('in_eligible', 'Did not meet eligibility criteria, after consent obtained'),
     ('incarcerated',
      'Participant is incarcerated'),
+    ('change_of_caregiver',
+     'Change of caregiver'),
     (OTHER, 'Other'),
 )
 
