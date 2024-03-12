@@ -82,4 +82,9 @@ if settings.APP_NAME == 'flourish_prn':
             'flourish_caregiver': (
                 'maternal_visit', 'flourish_caregiver.maternalvisit'),
             'flourish_child': (
-                'child_visit', 'flourish_child.childvisit')}
+                'child_visit', 'flourish_child.childvisit'),
+            'pre_flourish': (
+                'pre_flourish_visit', 'pre_flourish.preflourishvisit'),
+            'flourish_facet': (
+                'facet_visit', 'flourish_facet.facetvisit'),
+        }

@@ -3,6 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from edc_visit_schedule import site_visit_schedules
 
+from flourish_child.helper_classes.utils import child_utils
 from flourish_prn.models.child_off_study import ChildOffStudy
 from flourish_prn.models.tb_adol_off_study import TBAdolOffStudy
 
@@ -29,6 +30,29 @@ def child_offstudy_on_post_save(sender, instance, raw, created, **kwargs):
         if fu_notes.exists() and not fu_schedule.exists():
             fu_notes.delete()
 
+        if created:
+            # Take caregiver off-schedule for child related schedules
+            caregiver_sid = child_utils.caregiver_subject_identifier(subject_identifier)
+            onschedules = schedule_history_cls.objects.filter(
+                subject_identifier=caregiver_sid)
+            for onschedule in onschedules:
+                onschedule_cls = django_apps.get_model(onschedule.onschedule_model)
+                try:
+                    onschedule_obj = onschedule_cls.objects.get(
+                        subject_identifier=caregiver_sid,
+                        child_subject_identifier=subject_identifier)
+                except onschedule_cls.DoesNotExist:
+                    continue
+                else:
+                    _, schedule = site_visit_schedules.get_by_onschedule_model_schedule_name(
+                        onschedule_model=onschedule_obj._meta.label_lower,
+                        name=onschedule_obj.schedule_name)
+
+                    schedule.take_off_schedule(
+                        subject_identifier=caregiver_sid,
+                        offschedule_datetime=instance.report_datetime,
+                        schedule_name=onschedule_obj.schedule_name)
+        
 
 @receiver(post_save, weak=False, sender=TBAdolOffStudy,
           dispatch_uid='tb_adol_offstudy_post_save')
