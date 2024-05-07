@@ -1,25 +1,22 @@
 from edc_form_validators import FormValidator
-from edc_constants.constants import YES,NO
+from edc_constants.constants import YES, NO
 from django import forms
 
 
 class MissedBirthVisitFormValidator(FormValidator):
 
     def clean(self):
-         
+
         super().clean()
 
         self.validate_metrics_avail()
         self.validate_apgar_score()
         self.validate_gestational_age()
 
-
         self.not_required_if(
            NO,
            field='congenital_anomalities',
-           field_required="congenital_anomalities_info"
-       )
-
+           field_required="congenital_anomalities_info", )
 
     def validate_gestational_age(self):
         """
@@ -27,13 +24,12 @@ class MissedBirthVisitFormValidator(FormValidator):
         of this study
         """
         gestational_age = self.cleaned_data.get('gestational_age', 0)
-        
-        if gestational_age:
 
-            if  25 > gestational_age or gestational_age > 45:
+        if gestational_age:
+            if 25 > gestational_age or gestational_age > 45:
                 raise forms.ValidationError(
                     {'gestational_age': 'Gestational age should be between 25 and 45.'})
-                
+
         else:
             raise forms.ValidationError({'gestational_age': 'Gestational age is required'})
 

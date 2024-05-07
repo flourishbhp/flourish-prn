@@ -1,20 +1,19 @@
 from ..action_items import MISSED_BIRTH_VISIT_ACTION
 from edc_action_item.model_mixins import ActionModelMixin
-from edc_base.model_validators import date_not_future,datetime_not_future
+from edc_base.model_validators import date_not_future, datetime_not_future
 from edc_protocol.validators import datetime_not_before_study_start
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from edc_base.utils import get_utcnow
-from edc_constants.choices import YES_NO,YES
+from edc_constants.choices import YES_NO, YES
 from edc_base.model_mixins import BaseUuidModel
 
 
-class MissedBirthVisit(BaseUuidModel,ActionModelMixin):
+class MissedBirthVisit(BaseUuidModel, ActionModelMixin):
 
     tracking_identifier_prefix = 'MB'
 
     action_name = MISSED_BIRTH_VISIT_ACTION
-
 
     report_datetime = models.DateTimeField(
         verbose_name='Report Date',
@@ -30,7 +29,7 @@ class MissedBirthVisit(BaseUuidModel,ActionModelMixin):
         validators=[date_not_future, ],
         null=True,
         blank=True)
-    
+
     weight_avail = models.CharField(
         max_length=3,
         choices=YES_NO,
@@ -84,7 +83,7 @@ class MissedBirthVisit(BaseUuidModel,ActionModelMixin):
         max_digits=8,
         decimal_places=2,
         null=True, blank=False)
- 
+
     apgar_score = models.CharField(
         max_length=3,
         choices=YES_NO,
@@ -110,20 +109,19 @@ class MissedBirthVisit(BaseUuidModel,ActionModelMixin):
         null=True,
         validators=[MaxValueValidator(10),
                     MinValueValidator(0)])
-    
+
     congenital_anomalities = models.CharField(
         max_length=3,
         choices=YES_NO,
         verbose_name="Were any congenital anomalies identified? ",
         help_text="If 'Yes' please complete the Congenital Anomalies below",)
-    
+
     congenital_anomalities_info = models.TextField(
         max_length=255,
         verbose_name="Please add congenital anomalies",
         blank=True,
         null=True,)
-    
-        
+
     class Meta:
         app_label = 'flourish_prn'
         verbose_name = 'Missed Birth Visit Form'

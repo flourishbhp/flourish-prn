@@ -6,7 +6,6 @@ from ..admin_site import flourish_prn_admin
 from edc_model_admin import audit_fieldset_tuple
 
 
-
 @admin.register(MissedBirthVisit, site=flourish_prn_admin)
 class MissedBirthVisitAdmin(ModelAdminMixin, admin.ModelAdmin):
 
@@ -32,7 +31,6 @@ class MissedBirthVisitAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'congenital_anomalities',
                 'congenital_anomalities_info')}
          ), audit_fieldset_tuple)
-
 
     radio_fields = {
         'apgar_score': admin.VERTICAL,
