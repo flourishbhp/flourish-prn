@@ -11,7 +11,7 @@ from .death_report_mixin import DeathReportModelMixin
 
 
 class ChildDeathReport(DeathReportModelMixin, ActionModelMixin,
-                        SiteModelMixin, SearchSlugModelMixin, BaseUuidModel):
+                       SiteModelMixin, SearchSlugModelMixin, BaseUuidModel):
 
     ''' A model completed by the user after an infant's death. '''
 

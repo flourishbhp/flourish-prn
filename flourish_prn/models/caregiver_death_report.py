@@ -10,10 +10,10 @@ from .death_report_mixin import DeathReportModelMixin
 
 
 class CaregiverDeathReport(DeathReportModelMixin,
-                        SiteModelMixin,
-                        ActionModelMixin,
-                        SearchSlugModelMixin,
-                        BaseUuidModel):
+                           SiteModelMixin,
+                           ActionModelMixin,
+                           SearchSlugModelMixin,
+                           BaseUuidModel):
 
     tracking_identifier_prefix = 'MO'
 

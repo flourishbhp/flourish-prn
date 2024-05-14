@@ -26,7 +26,8 @@ class OffstudyFormValidator(FormValidator):
         subject_identifier = self.cleaned_data.get('subject_identifier')
         offstudy_point = self.cleaned_data.get('offstudy_point')
         try:
-            antenantal_enrollment = self.antenantal_enrollment_model_cls.objects.get(subject_identifier=subject_identifier)
+            antenantal_enrollment = self.antenantal_enrollment_model_cls.objects.get(
+                subject_identifier=subject_identifier)
         except ObjectDoesNotExist:
             pass
         else:

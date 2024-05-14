@@ -34,8 +34,7 @@ class CaregiverDeathReportAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'comment',
                 ]}
          ), audit_fieldset_tuple)
-    
-    
+
     radio_fields = {
         'cause': admin.VERTICAL,
         'cause_category': admin.VERTICAL,

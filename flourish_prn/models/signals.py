@@ -52,7 +52,7 @@ def child_offstudy_on_post_save(sender, instance, raw, created, **kwargs):
                         subject_identifier=caregiver_sid,
                         offschedule_datetime=instance.report_datetime,
                         schedule_name=onschedule_obj.schedule_name)
-        
+
 
 @receiver(post_save, weak=False, sender=TBAdolOffStudy,
           dispatch_uid='tb_adol_offstudy_post_save')
