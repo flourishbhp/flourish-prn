@@ -1,60 +1,76 @@
-import datetime
-import uuid
-
-from django.http import HttpResponse
-from django.utils import timezone
+from django.db.models import (FileField, ForeignKey, ImageField, ManyToManyField,
+                              ManyToOneRel, OneToOneField)
+from django.db.models.fields.reverse_related import OneToOneRel
 from django.utils.translation import ugettext_lazy as _
-import xlwt
 from django.apps import apps as django_apps
 
+from flourish_export.admin_export_helper import AdminExportHelper
 
-class ExportActionMixin:
+
+class ExportActionMixin(AdminExportHelper):
+
+    def update_variables(self, subject_identifier, data={}):
+        """ Update study identifiers to desired variable name(s).
+        """
+        new_data_dict = {}
+        replace_idx = {'child_subject_identifier': 'childpid',
+                       'study_maternal_identifier': 'old_matpid',
+                       'study_child_identifier': 'old_childpid'}
+
+        if len(subject_identifier.split('-')) == 3:
+            replace_idx.update(
+                {'subject_identifier': 'matpid'})
+        elif len(subject_identifier.split('-')) == 4:
+            replace_idx.update(
+                {'subject_identifier': 'childpid'})
+
+        for old_idx, new_idx in replace_idx.items():
+            try:
+                new_data_dict[new_idx] = data.pop(old_idx)
+            except KeyError:
+                continue
+        new_data_dict.update(data)
+        return new_data_dict
 
     def export_as_csv(self, request, queryset):
-
-        response = HttpResponse(content_type='application/ms-excel')
-        response['Content-Disposition'] = 'attachment; filename=%s.xls' % (
-            self.get_export_filename())
-
-        wb = xlwt.Workbook(encoding='utf-8', style_compression=2)
-        ws = wb.add_sheet('%s')
-
-        row_num = 0
-
-        font_style = xlwt.XFStyle()
-        font_style.font.bold = True
-        font_style.num_format_str = 'YYYY/MM/DD h:mm:ss'
-
-        field_names = queryset[0].__dict__
-        field_names = [a for a in field_names.keys()]
-        field_names.remove('_state')
-        field_names.append('dob')
-
-        for col_num in range(len(field_names)):
-            ws.write(row_num, col_num, field_names[col_num], font_style)
+        records = []
 
         for obj in queryset:
-            obj_data = obj.__dict__
+            data = obj.__dict__.copy()
+            subject_identifier = getattr(obj, 'subject_identifier', None)
 
-            dob = self.dob_obj(obj_data['subject_identifier'])
+            dob = self.dob_obj(subject_identifier)
 
             if dob:
-                obj_data['dob'] = self.dob_obj(obj_data['subject_identifier']).strftime('%Y/%m/%d')
+                data.update(dob=dob.strftime('%Y/%m/%d'))
             else:
-                obj_data['dob'] = 'N/A'
+                data.update(dob='N/A')
 
-            data = [obj_data[field] for field in field_names]
+            # Update variable names for study identifiers
+            data = self.update_variables(subject_identifier, data)
 
-            row_num += 1
-            for col_num in range(len(data)):
-                if isinstance(data[col_num], uuid.UUID):
-                    ws.write(row_num, col_num, str(data[col_num]))
-                elif isinstance(data[col_num], datetime.datetime):
-                    data[col_num] = timezone.make_naive(data[col_num])
-                    ws.write(row_num, col_num, data[col_num], xlwt.easyxf(num_format_str='YYYY/MM/DD h:mm:ss'))
-                else:
-                    ws.write(row_num, col_num, data[col_num])
-        wb.save(response)
+            for field in self.get_model_fields:
+                field_name = field.name
+                if isinstance(field, (ForeignKey, OneToOneField, OneToOneRel,)):
+                    continue
+                if isinstance(field, (FileField, ImageField,)):
+                    file_obj = getattr(obj, field_name, '')
+                    data.update({f'{field_name}': getattr(file_obj, 'name', '')})
+                    continue
+                if isinstance(field, ManyToManyField):
+                    data.update(self.m2m_data_dict(obj, field))
+                    continue
+                if isinstance(field, ManyToOneRel):
+                    data.update(self.inline_data_dict(obj, field))
+                    continue
+
+            # Exclude identifying values
+            data = self.remove_exclude_fields(data)
+            # Correct date formats
+            data = self.fix_date_formats(data)
+            records.append(data)
+
+        response = self.write_to_csv(records)
         return response
 
     export_as_csv.short_description = _(
@@ -68,17 +84,32 @@ class ExportActionMixin:
         child_consent_cls = django_apps.get_model(
             'flourish_caregiver.caregiverchildconsent')
 
-        try:
-            consent = consent_cls.objects.filter(
-                subject_identifier=subject_identifier).latest('consent_datetime')
-        except consent_cls.DoesNotExist:
-            consent = child_consent_cls.objects.filter(
-                subject_identifier=subject_identifier).latest('consent_datetime')
-            return consent.child_dob
-        else:
-            return consent.dob
+        query_attr = {'subject_identifier': subject_identifier}
+        caregiver_dob = getattr(
+            self.get_model_obj(consent_cls, query_attr), 'dob', None)
 
-    def get_export_filename(self):
-        date_str = datetime.datetime.now().strftime('%Y-%m-%d')
-        filename = "%s-%s" % (self.model.__name__, date_str)
-        return filename
+        child_dob = getattr(
+            self.get_model_obj(child_consent_cls, query_attr), 'child_dob', None)
+
+        return caregiver_dob or child_dob
+
+    def get_model_obj(self, model_cls, query_attrs={}):
+        try:
+            return model_cls.objects.filter(
+                **query_attrs).latest('consent_datetime')
+        except model_cls.DoesNotExist:
+            return None
+
+    @property
+    def exclude_fields(self):
+        return ['_state', 'hostname_created', 'hostname_modified',
+                'revision', 'device_created', 'device_modified', 'id',
+                'site_id', 'modified_time', 'report_datetime_time',
+                'registration_datetime_time', 'screening_datetime_time',
+                'modified', 'form_as_json', 'consent_model',
+                'randomization_datetime', 'registration_datetime',
+                'is_verified_datetime', 'first_name', 'last_name', 'initials',
+                'guardian_name', 'identity', 'related_tracking_identifier',
+                'parent_tracking_identifier', 'action_identifier',
+                'tracking_identifier', 'slug', 'confirm_identity', 'site',
+                'subject_consent_id', '_django_version', ]
