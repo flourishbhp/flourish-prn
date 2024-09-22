@@ -32,11 +32,15 @@ def child_offstudy_on_post_save(sender, instance, raw, created, **kwargs):
 
         if created:
             # Take caregiver off-schedule for child related schedules
-            caregiver_sid = child_utils.caregiver_subject_identifier(subject_identifier)
+            caregiver_sid = child_utils.caregiver_subject_identifier(
+                subject_identifier)
             onschedules = schedule_history_cls.objects.filter(
                 subject_identifier=caregiver_sid)
             for onschedule in onschedules:
-                onschedule_cls = django_apps.get_model(onschedule.onschedule_model)
+                if onschedule.schedule_status == 'offschedule':
+                    continue
+                onschedule_cls = django_apps.get_model(
+                    onschedule.onschedule_model)
                 try:
                     onschedule_obj = onschedule_cls.objects.get(
                         subject_identifier=caregiver_sid,
