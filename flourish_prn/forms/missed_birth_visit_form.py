@@ -31,6 +31,8 @@ class MissedBirthVisitForm(
         if antenatal_enrol_obj:
             if antenatal_enrol_obj.real_time_ga:
                 self.initial['gestational_age'] = antenatal_enrol_obj.real_time_ga
+                self.fields['gestational_age'].widget = forms.TextInput(
+                attrs={'readonly': 'readonly'})
 
     class Meta:
         model = MissedBirthVisit
