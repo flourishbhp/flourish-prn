@@ -1,14 +1,29 @@
 from edc_form_validators import FormValidator
-from edc_constants.constants import YES, NO
 from django import forms
+from django.apps import apps as django_apps
+from edc_constants.constants import YES, NO
 
 
 class MissedBirthVisitFormValidator(FormValidator):
+
+    child_birth_model = 'flourish_child.childbirth'
+
+    @property
+    def child_birth_model_cls(self):
+        return django_apps.get_model(self.child_birth_model)
+
+    def child_birth_model_obj(self, subject_identifier):
+        try:
+            return self.child_birth_model_cls.objects.get(
+                subject_identifier=subject_identifier)
+        except self.child_birth_model_cls.DoesNotExist:
+            return None
 
     def clean(self):
 
         super().clean()
 
+        self.validate_child_dob()
         self.validate_metrics_avail()
         self.validate_apgar_score()
         self.validate_gestational_age()
@@ -54,3 +69,15 @@ class MissedBirthVisitFormValidator(FormValidator):
                 YES,
                 field=field,
                 field_required=required_field)
+
+    def validate_child_dob(self):
+        subject_identifier = self.cleaned_data.get('subject_identifier', None)
+        infant_dob = self.cleaned_data.get('infant_dob', None)
+        child_birth = self.child_birth_model_obj(subject_identifier)
+        child_birth_dob = getattr(child_birth, 'dob', None)
+
+        if child_birth_dob and infant_dob and infant_dob != child_birth_dob:
+            raise forms.ValidationError(
+                {'infant_dob':
+                 'Please correct date of birth does not match DOB: '
+                 f'{child_birth_dob} from Infant Birth form.'})
