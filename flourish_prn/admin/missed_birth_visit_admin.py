@@ -38,3 +38,8 @@ class MissedBirthVisitAdmin(ModelAdminMixin, admin.ModelAdmin):
         'weight_avail': admin.VERTICAL,
         'length_avail': admin.VERTICAL,
         'head_circ_avail': admin.VERTICAL}
+
+    list_display = ('subject_identifier', 'report_datetime',
+                    'infant_dob', 'gestational_age')
+
+    search_fields = ('subject_identifier', )
