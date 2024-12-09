@@ -8,9 +8,15 @@ class OffstudyFormValidator(FormValidator):
 
     antenantal_enrollment_model = 'flourish_caregiver.antenatalenrollment'
 
+    caregiver_death_model = 'flourish_prn.caregiverdeathreport'
+
     @property
     def antenantal_enrollment_model_cls(self):
         return django_apps.get_model(self.antenantal_enrollment_model)
+
+    @property
+    def caregiver_death_model_cls(self):
+        return django_apps.get_model(self.caregiver_death_model)
 
     def clean(self):
         super().clean()
@@ -21,6 +27,7 @@ class OffstudyFormValidator(FormValidator):
         )
         self.validate_against_latest_visit()
         self.validate_preg_subcohotA()
+        self.validate_death_reason()
 
     def validate_preg_subcohotA(self):
         subject_identifier = self.cleaned_data.get('subject_identifier')
@@ -31,7 +38,7 @@ class OffstudyFormValidator(FormValidator):
         except ObjectDoesNotExist:
             pass
         else:
-            if antenantal_enrollment and offstudy_point == None:
+            if antenantal_enrollment and offstudy_point is None:
                 raise forms.ValidationError({
                         'offstudy_point': 'Question 6 required for pregnant women'
                     })
@@ -63,3 +70,19 @@ class OffstudyFormValidator(FormValidator):
                     f'before previous visit Got {offstudy_date} '
                     f'but previous visit is {latest_visit_datetime.date()}'
                 })
+
+    def validate_death_reason(self):
+        offstudy_reason = self.cleaned_data.get('reason')
+        if (offstudy_reason == 'caregiver_death' and
+                not self.check_death_report_exists):
+            message = {'reason':
+                       'Caregiver death report does not exist, please'
+                       ' capture the death report before off-study form.'}
+            self._errors.update(message)
+            raise forms.ValidationError(message)
+
+    @property
+    def check_death_report_exists(self):
+        subject_identifier = self.cleaned_data.get('subject_identifier')
+        return self.caregiver_death_model_cls.objects.filter(
+            subject_identifier=subject_identifier).exists()
