@@ -1,5 +1,4 @@
 from django import forms
-from django.apps import apps as django_apps
 from edc_form_validators import FormValidatorMixin
 
 from flourish_form_validations.form_validators import FormValidatorMixin as FlourishFormValidatorMixin
