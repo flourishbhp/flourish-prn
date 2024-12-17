@@ -54,6 +54,8 @@ CAREGIVER_OFF_STUDY_REASON = (
      'Participant is incarcerated'),
     ('change_of_caregiver',
      'Change of caregiver'),
+     ('continue_without_mother',
+     'Child consented on Child Continued Consent, and chose to participate on study without mother / caregiver'),
     (OTHER, 'Other'),
 )
 
