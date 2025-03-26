@@ -4,6 +4,7 @@ from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators.date import datetime_not_future
 from edc_base.utils import get_utcnow
+from edc_constants.choices import YES_NO_NA, NOT_APPLICABLE
 from edc_identifier.managers import SubjectIdentifierManager
 from edc_protocol.validators import datetime_not_before_study_start
 
@@ -44,6 +45,13 @@ class CaregiverOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
         max_length=50,
         blank=True, null=True,
         help_text='For pregnant women enrolled in Cohort A')
+
+    future_studies = models.CharField(
+        verbose_name=('We recognize you stated you are interested in future '
+                      'studies. Is that still the case? '),
+        max_length=3,
+        choices=YES_NO_NA,
+        default=NOT_APPLICABLE)
 
     objects = SubjectIdentifierManager()
 

@@ -1,7 +1,13 @@
+import pytz
+from django.apps import apps as django_apps
 from django.conf import settings
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 from django_revision.modeladmin_mixin import ModelAdminRevisionMixin
 from edc_base.sites.admin import ModelAdminSiteMixin
+from edc_constants.constants import YES
+from edc_fieldsets import FieldsetsModelAdminMixin
+from edc_fieldsets.fieldlist import Remove
 from edc_metadata import NextFormGetter
 from edc_model_admin import (
     ModelAdminNextUrlRedirectMixin, ModelAdminFormInstructionsMixin,
@@ -15,6 +21,9 @@ from ..admin_site import flourish_prn_admin
 from ..forms import CaregiverOffStudyForm
 from ..models import CaregiverOffStudy
 from .exportaction_mixin import ExportActionMixin
+
+
+tz = pytz.timezone('Africa/Gaborone')
 
 
 class ModelAdminMixin(ModelAdminNextUrlRedirectMixin,
@@ -40,7 +49,8 @@ class ModelAdminMixin(ModelAdminNextUrlRedirectMixin,
 
 
 @admin.register(CaregiverOffStudy, site=flourish_prn_admin)
-class CaregiverOffStudyAdmin(ModelAdminMixin, admin.ModelAdmin):
+class CaregiverOffStudyAdmin(ModelAdminMixin,  FieldsetsModelAdminMixin,
+                             admin.ModelAdmin):
 
     form = CaregiverOffStudyForm
 
@@ -55,8 +65,62 @@ class CaregiverOffStudyAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'reason',
                 'reason_other',
                 'offstudy_point',
+                'future_studies',
                 'comment']}
          ), audit_fieldset_tuple)
 
     radio_fields = {'reason': admin.VERTICAL,
-                    'offstudy_point': admin.VERTICAL}
+                    'offstudy_point': admin.VERTICAL,
+                    'future_studies': admin.VERTICAL}
+
+    conditional_fieldlists = {
+        'not_interested': Remove('future_studies')}
+
+    def get_key(self, request, obj=None):
+        subject_identifier = request.GET.get(
+            'subject_identifier', None)
+        model_obj = self.get_subject_consent(subject_identifier)
+        future_contact = getattr(model_obj, 'future_contact', None)
+        if future_contact != YES:
+            return 'not_interested'
+
+    def get_subject_consent(self, subject_identifier):
+        consent_cls = django_apps.get_model(
+            'flourish_caregiver.subjectconsent')
+        try:
+            model_obj = consent_cls.objects.filter(
+                subject_identifier=subject_identifier).earliest(
+                    'consent_datetime')
+        except consent_cls.DoesNotExist:
+            return None
+        else:
+            return model_obj
+
+    def offstudy_extra_details(self, subject_identifier):
+        model_obj = self.get_subject_consent(subject_identifier)
+        consent_dt = getattr(model_obj, 'consent_datetime', None)
+        if consent_dt:
+            consent_dt = consent_dt.astimezone(tz).strftime('%d-%B-%Y')
+            return mark_safe(
+                f'Thank you for participating since <b>{consent_dt}</b>, '
+                'we will be concluding the study, and you will be taken '
+                'off-study on <b>30-June-2025</b>. We will not be '
+                'collecting any additional study data as of today.')
+
+    def add_view(self, request, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        subject_identifier = request.GET.get('subject_identifier', None)
+        extra_context['offstudy_script'] = self.offstudy_extra_details(
+            subject_identifier)
+
+        return super().add_view(
+            request, form_url=form_url, extra_context=extra_context)
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        subject_identifier = request.GET.get('subject_identifier', None)
+        extra_context['offstudy_script'] = self.offstudy_extra_details(
+            subject_identifier)
+
+        return super().change_view(
+            request, object_id, form_url=form_url, extra_context=extra_context)
