@@ -11,8 +11,6 @@ TB_ADOL_STUDY_ACTION = 'submit-tb-adol-off-study'
 MISSED_BIRTH_VISIT_ACTION = 'submit-missed-birth-visit'
 
 
-
-
 class CaregiverOffStudyAction(Action):
     name = CAREGIVEROFF_STUDY_ACTION
     display_name = 'Submit Caregiver Offstudy'
@@ -22,14 +20,16 @@ class CaregiverOffStudyAction(Action):
     priority = HIGH_PRIORITY
     singleton = True
 
+
 class MissedBirthVisitAction(Action):
     name = MISSED_BIRTH_VISIT_ACTION
-    display_name ='Submit Missed Birth Visit'
-    reference_model ='flourish_prn.missedbirthvisit'
+    display_name = 'Submit Missed Birth Visit'
+    reference_model = 'flourish_prn.missedbirthvisit'
     admin_site_name = 'flourish_prn_admin'
     show_link_to_add = True
     priority = HIGH_PRIORITY
     singleton = True
+
 
 class ChildOffStudyAction(Action):
     name = CHILDOFF_STUDY_ACTION
@@ -42,7 +42,6 @@ class ChildOffStudyAction(Action):
 
     def get_next_actions(self):
         actions = []
-        offstudy = None
         child_deathreport_cls = django_apps.get_model(
             'flourish_prn.childdeathreport')
 
