@@ -1,0 +1,12 @@
+{% extends 'edc_model_admin/admin/change_form.html' %}
+{% load static %}
+
+{% block field_sets %}
+
+	{% if offstudy_script %}
+	    <p>{{ offstudy_script }}</p>
+	{% endif %}
+ 
+  {{ block.super }}
+
+{% endblock field_sets %}

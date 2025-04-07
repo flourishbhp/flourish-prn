@@ -1,7 +1,8 @@
 from django import forms
 from django.apps import apps as django_apps
-from edc_form_validators import FormValidator
 from django.core.exceptions import ObjectDoesNotExist
+from edc_constants.constants import YES
+from edc_form_validators import FormValidator
 
 
 class OffstudyFormValidator(FormValidator):
@@ -10,6 +11,8 @@ class OffstudyFormValidator(FormValidator):
 
     caregiver_death_model = 'flourish_prn.caregiverdeathreport'
 
+    subject_consent_model = 'flourish_caregiver.subjectconsent'
+
     @property
     def antenantal_enrollment_model_cls(self):
         return django_apps.get_model(self.antenantal_enrollment_model)
@@ -17,6 +20,10 @@ class OffstudyFormValidator(FormValidator):
     @property
     def caregiver_death_model_cls(self):
         return django_apps.get_model(self.caregiver_death_model)
+
+    @property
+    def subject_consent_model_cls(self):
+        return django_apps.get_model(self.subject_consent_model)
 
     def clean(self):
         super().clean()
@@ -28,6 +35,11 @@ class OffstudyFormValidator(FormValidator):
         self.validate_against_latest_visit()
         self.validate_preg_subcohotA()
         self.validate_death_reason()
+
+        self.applicable_if_true(
+            self.consented_future_contact,
+            field_applicable='future_studies',
+        )
 
     def validate_preg_subcohotA(self):
         subject_identifier = self.cleaned_data.get('subject_identifier')
@@ -86,3 +98,16 @@ class OffstudyFormValidator(FormValidator):
         subject_identifier = self.cleaned_data.get('subject_identifier')
         return self.caregiver_death_model_cls.objects.filter(
             subject_identifier=subject_identifier).exists()
+
+    @property
+    def consented_future_contact(self):
+        subject_identifier = self.cleaned_data.get('subject_identifier')
+
+        try:
+            model_obj = self.subject_consent_model_cls.objects.filter(
+                subject_identifier=subject_identifier).latest(
+                    'consent_datetime')
+        except self.subject_consent_model_cls.DoesNotExist:
+            return None
+        else:
+            return model_obj.future_contact == YES
