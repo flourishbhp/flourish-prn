@@ -18,11 +18,19 @@ class ChildOffStudyForm(FormValidatorMixin, forms.ModelForm):
         label='Subject Identifier',
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
+    cohort_model = 'flourish_caregiver.cohort'
+
+    @property
+    def cohort_model_cls(self):
+        return django_apps.get_model(self.cohort_model)
+
     def clean(self):
         self.infant_identifier = self.cleaned_data.get('subject_identifier')
         super().clean()
 
         self.validate_offstudy_date()
+
+        self.validate_against_childage()
 
     def validate_offstudy_date(self):
         offstudy_date = self.cleaned_data.get('offstudy_date')
@@ -38,6 +46,21 @@ class ChildOffStudyForm(FormValidatorMixin, forms.ModelForm):
             if offstudy_date and offstudy_date < dummy_consent.report_datetime.date():
                 raise forms.ValidationError(
                     "Offstudy date cannot be before enrollment datetime.")
+
+    def validate_against_childage(self):
+        reason = self.cleaned_data.get('reason')
+        try:
+            cohort = self.cohort_model_cls.objects.filter(
+                subject_identifier=self.infant_identifier).latest(
+                    'assign_datetime')
+        except self.cohort_model_cls.DoesNotExist:
+            pass
+        else:
+            child_age = cohort.child_age
+            if (child_age and child_age < 18 and
+                    reason in ['18_na_reconsent', '18_no_contact']):
+                raise forms.ValidationError(
+                    {'reason': 'Child is less than 18 years of age'})
 
     class Meta:
         model = ChildOffStudy
