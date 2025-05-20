@@ -54,7 +54,7 @@ CAREGIVER_OFF_STUDY_REASON = (
      'Participant is incarcerated'),
     ('change_of_caregiver',
      'Change of caregiver'),
-     ('continue_without_mother',
+    ('continue_without_mother',
      'Child consented on Child Continued Consent, and chose to participate on study without mother / caregiver'),
     (OTHER, 'Other'),
 )
@@ -86,6 +86,9 @@ CHILD_OFF_STUDY_REASON = (
      'Enrolled erroneously – did not meet eligibility criteria prior to consent'),
     ('in_eligible', 'Did not meet eligibility criteria, after consent obtained'),
     ('incarcerated', 'Adolescent is incarcerated'),
+    ('18_na_reconsent',
+     '18-year old; Contacted but could not come into the study clinic for re-consenting'),
+    ('18_no_contact', '18-year old; Unable to contact'),
     (OTHER, ' Other'),
 )
 
