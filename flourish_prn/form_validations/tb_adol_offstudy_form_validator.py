@@ -1,41 +1,45 @@
 from ..form_validations import OffstudyFormValidator
 from django.apps import apps as django_apps
 from django import forms
+from django.core.exceptions import ValidationError
+from edc_form_validators import FormValidator
 
-
-class TBAdolOffstudyValidator(OffstudyFormValidator):
+class TBAdolOffstudyValidator(OffstudyFormValidator,FormValidator):
     def clean(self):
-            super().clean()
+        self.subject_identifier = self.cleaned_data.get('subject_identifier')
+        super().clean()
+        latest_visit = self.get_latest_visit()
+        self.validate_offstudy_date()
+        self.validate_against_latest_visit(latest_visit)
 
-    def validate_against_latest_visit(self):
-            self.visit_cls = django_apps.get_model(
-                'flourish_child.childvisit')
+                
+    def validate_offstudy_date(self):
+        offstudy_date = self.cleaned_data.get('offstudy_date')
+       
+        tb_adol_assent_model_cls = django_apps.get_model(
+            'flourish_child.tbadolassent')
+        
+        try:
+            tb_adol_assent = tb_adol_assent_model_cls.objects.filter(
+                subject_identifier=self.subject_identifier).latest('consent_datetime')
+        except tb_adol_assent_model_cls.DoesNotExist:
+            raise ValidationError('Tb adol Assent does not exist.')
+        else:
+            if offstudy_date and offstudy_date < tb_adol_assent.consent_datetime.date():
+                raise forms.ValidationError(
+                    f"Offstudy date {offstudy_date} cannot be before Assent datetime "
+                    f"{tb_adol_assent.consent_datetime.date()}.")
+            
 
-            subject_identifier = self.cleaned_data.get('subject_identifier')
-            latest_visit = self.visit_cls.objects.filter(
-                appointment__subject_identifier=subject_identifier,
-                schedule_name__icontains='tb_adol').order_by(
-                '-report_datetime').first()
+    def get_latest_visit(self):
+        self.visit_cls = django_apps.get_model('flourish_child.childvisit')
+        if not self.subject_identifier:
+            return None
 
-            report_datetime = self.cleaned_data.get('report_datetime')
-            offstudy_date = self.cleaned_data.get('offstudy_date')
-
-            if latest_visit:
-                latest_visit_datetime = latest_visit.report_datetime
-
-                if report_datetime < latest_visit.report_datetime:
-                    raise forms.ValidationError({
-                        'report_datetime': 'Report datetime cannot be '
-                        f'before previous visit Got {report_datetime} '
-                        f'but previous visit is {latest_visit_datetime}'
-                    })
-                if offstudy_date and \
-                        offstudy_date < latest_visit.report_datetime.date():
-                    raise forms.ValidationError({
-                        'offstudy_date': 'Offstudy date cannot be '
-                        f'before previous visit Got {offstudy_date} '
-                        f'but previous visit is {latest_visit_datetime.date()}'
-                    })
+        return self.visit_cls.objects.filter(
+            appointment__subject_identifier=self.subject_identifier,
+            schedule_name__icontains='tb_adol'
+        ).order_by('-report_datetime').first()
                 
 
     
