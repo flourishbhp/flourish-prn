@@ -8,9 +8,8 @@ class TBAdolOffstudyValidator(OffstudyFormValidator,FormValidator):
     def clean(self):
         self.subject_identifier = self.cleaned_data.get('subject_identifier')
         super().clean()
-        latest_visit = self.get_latest_visit()
         self.validate_offstudy_date()
-        self.validate_against_latest_visit(latest_visit)
+        
 
                 
     def validate_offstudy_date(self):
@@ -31,15 +30,22 @@ class TBAdolOffstudyValidator(OffstudyFormValidator,FormValidator):
                     f"{tb_adol_assent.consent_datetime.date()}.")
             
 
-    def get_latest_visit(self):
+    def validate_against_latest_visit(self):
+
         self.visit_cls = django_apps.get_model('flourish_child.childvisit')
         if not self.subject_identifier:
             return None
-
-        return self.visit_cls.objects.filter(
+        latest_visit =self.visit_cls.objects.filter(
             appointment__subject_identifier=self.subject_identifier,
             schedule_name__icontains='tb_adol'
         ).order_by('-report_datetime').first()
+
+        super().validate_against_latest_visit(latest_visit)
+    
+
+    
+    
+
                 
 
     

@@ -34,6 +34,7 @@ class OffstudyFormValidator(FormValidator):
         )
         self.validate_preg_subcohotA()
         self.validate_death_reason()
+        self.validate_against_latest_visit()
 
         reason = self.cleaned_data.get('reason')
         unreacheable = ['caregiver_death', 'loss_to_followup', 'incarcerated']
