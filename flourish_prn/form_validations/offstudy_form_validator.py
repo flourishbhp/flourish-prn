@@ -32,9 +32,9 @@ class OffstudyFormValidator(FormValidator):
             field='reason',
             other_specify_field='reason_other',
         )
-        self.validate_against_latest_visit()
         self.validate_preg_subcohotA()
         self.validate_death_reason()
+        self.validate_against_latest_visit()
 
         reason = self.cleaned_data.get('reason')
         unreacheable = ['caregiver_death', 'loss_to_followup', 'incarcerated']
@@ -57,13 +57,14 @@ class OffstudyFormValidator(FormValidator):
                         'offstudy_point': 'Question 6 required for pregnant women'
                     })
 
-    def validate_against_latest_visit(self):
+    def validate_against_latest_visit(self, latest_visit = None):
         self.visit_cls = django_apps.get_model(self.visit_model)
 
         subject_identifier = self.cleaned_data.get('subject_identifier')
-        latest_visit = self.visit_cls.objects.filter(
-            appointment__subject_identifier=subject_identifier).order_by(
-            '-report_datetime').first()
+        if latest_visit is None:
+            latest_visit = self.visit_cls.objects.filter(
+                appointment__subject_identifier=subject_identifier).order_by(
+                '-report_datetime').first()
 
         report_datetime = self.cleaned_data.get('report_datetime')
         offstudy_date = self.cleaned_data.get('offstudy_date')
