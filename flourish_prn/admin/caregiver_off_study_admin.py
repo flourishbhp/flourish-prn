@@ -105,8 +105,8 @@ class CaregiverOffStudyAdmin(ModelAdminMixin,  FieldsetsModelAdminMixin,
                 f'Thank you for participating since <b>{consent_dt}</b>, '
                 'we will be concluding the study, and you will be taken '
                 'off-study today. We will not be collecting any additional '
-                'study data as of today, however the team will reach out '
-                'to inform you about the study results.')
+                'study data as of today, however the team will inform you '
+                'about the study results today.')
 
     def add_view(self, request, form_url='', extra_context=None):
         extra_context = extra_context or {}
