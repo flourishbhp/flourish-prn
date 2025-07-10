@@ -1,5 +1,6 @@
 from django.apps import apps as django_apps
 from django.db import models
+from django.db.models import Q
 from edc_base.model_managers import HistoricalRecords
 from edc_base.model_mixins import BaseUuidModel
 from edc_base.model_validators.date import datetime_not_future
@@ -57,24 +58,38 @@ class CaregiverOffStudy(OffStudyModelMixin, OffScheduleModelMixin,
 
     history = HistoricalRecords()
 
-    def take_off_schedule(self):
+    @property
+    def onschedules(self):
+        onschedules = []
         history_model = 'edc_visit_schedule.subjectschedulehistory'
         history_cls = django_apps.get_model(history_model)
-        onschedules = history_cls.objects.onschedules(
+
+        schedules = history_cls.objects.filter(
+            (Q(offschedule_datetime__gte=self.report_datetime) |
+             Q(offschedule_datetime__isnull=True)),
             subject_identifier=self.subject_identifier,
-            report_datetime=self.report_datetime)
+            onschedule_datetime__lte=self.report_datetime)
 
-        if onschedules:
-            for onschedule in onschedules:
-                _, schedule = \
-                    site_visit_schedules.get_by_onschedule_model_schedule_name(
-                        onschedule_model=onschedule._meta.label_lower,
-                        name=onschedule.schedule_name)
-
-                schedule.take_off_schedule(
+        for obj in schedules:
+            onschedule_model_cls = django_apps.get_model(
+                obj.onschedule_model)
+            onschedules.append(
+                onschedule_model_cls.objects.get(
                     subject_identifier=self.subject_identifier,
-                    offschedule_datetime=self.report_datetime,
-                    schedule_name=onschedule.schedule_name)
+                    schedule_name=obj.schedule_name))
+        return onschedules
+
+    def take_off_schedule(self):
+        for onschedule in self.onschedules:
+            _, schedule = \
+                site_visit_schedules.get_by_onschedule_model_schedule_name(
+                    onschedule_model=onschedule._meta.label_lower,
+                    name=onschedule.schedule_name)
+
+            schedule.take_off_schedule(
+                subject_identifier=self.subject_identifier,
+                offschedule_datetime=self.report_datetime,
+                schedule_name=onschedule.schedule_name)
 
     class Meta:
         app_label = 'flourish_prn'

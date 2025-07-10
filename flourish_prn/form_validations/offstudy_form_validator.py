@@ -46,18 +46,22 @@ class OffstudyFormValidator(FormValidator):
     def validate_preg_subcohotA(self):
         subject_identifier = self.cleaned_data.get('subject_identifier')
         offstudy_point = self.cleaned_data.get('offstudy_point')
-        try:
-            antenantal_enrollment = self.antenantal_enrollment_model_cls.objects.get(
-                subject_identifier=subject_identifier)
-        except ObjectDoesNotExist:
-            pass
-        else:
-            if antenantal_enrollment and offstudy_point is None:
-                raise forms.ValidationError({
-                        'offstudy_point': 'Question 6 required for pregnant women'
-                    })
 
-    def validate_against_latest_visit(self, latest_visit = None):
+        anc_enrollment = self.antenantal_enrollment_model_cls.objects.filter(
+            subject_identifier=subject_identifier).exists()
+
+        if anc_enrollment:
+            if offstudy_point is None:
+                raise forms.ValidationError(
+                    {'offstudy_point':
+                     'Question 6 is required for pregnant women'})
+        else:
+            if bool(offstudy_point):
+                raise forms.ValidationError(
+                    {'offstudy_point':
+                     'This question is only applicable for pregnant women'})
+
+    def validate_against_latest_visit(self, latest_visit=None):
         self.visit_cls = django_apps.get_model(self.visit_model)
 
         subject_identifier = self.cleaned_data.get('subject_identifier')
