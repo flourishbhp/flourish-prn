@@ -2,9 +2,12 @@ from django import forms
 from django.apps import apps as django_apps
 from django.db import models
 from edc_base.model_fields.custom_fields import OtherCharField
-from edc_base.model_validators import date_not_future
-from edc_protocol.validators import date_not_before_study_start
+from edc_base.model_validators import date_not_future, datetime_not_future
+from edc_base.utils import get_utcnow
+from edc_protocol.validators import date_not_before_study_start, datetime_not_before_study_start
 from flourish_child.helper_classes.utils import child_utils
+
+from ..choices import COMMUNICATION_METHODS
 
 
 class OffStudyModelMixin(models.Model):
@@ -16,6 +19,20 @@ class OffStudyModelMixin(models.Model):
             date_not_future])
 
     reason_other = OtherCharField()
+
+    results_method = models.CharField(
+        verbose_name=('Methods used to communicate study findings'
+                      ' to the participant'),
+        max_length=20,
+        choices=COMMUNICATION_METHODS)
+
+    results_dt = models.DateTimeField(
+        verbose_name='Date and time findings communicated',
+        validators=[
+            datetime_not_before_study_start,
+            datetime_not_future],
+        null=True,
+        blank=True)
 
     comment = models.TextField(
         max_length=250,

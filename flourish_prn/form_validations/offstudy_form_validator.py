@@ -1,7 +1,6 @@
 from django import forms
 from django.apps import apps as django_apps
-from django.core.exceptions import ObjectDoesNotExist
-from edc_constants.constants import YES
+from edc_constants.constants import YES, NOT_APPLICABLE
 from edc_form_validators import FormValidator
 
 
@@ -12,6 +11,8 @@ class OffstudyFormValidator(FormValidator):
     caregiver_death_model = 'flourish_prn.caregiverdeathreport'
 
     subject_consent_model = 'flourish_caregiver.subjectconsent'
+
+    child_cohort_model = None
 
     @property
     def antenantal_enrollment_model_cls(self):
@@ -25,6 +26,10 @@ class OffstudyFormValidator(FormValidator):
     def subject_consent_model_cls(self):
         return django_apps.get_model(self.subject_consent_model)
 
+    @property
+    def child_cohort_model_cls(self):
+        return django_apps.get_model(self.child_cohort_model)
+
     def clean(self):
         super().clean()
 
@@ -37,27 +42,46 @@ class OffstudyFormValidator(FormValidator):
         self.validate_against_latest_visit()
 
         reason = self.cleaned_data.get('reason')
-        unreacheable = ['caregiver_death', 'loss_to_followup', 'incarcerated']
+        unreacheable = ['caregiver_death', 'loss_to_followup', 'incarcerated',
+                        'ltfu', 'death', '18_no_contact']
         self.applicable_if_true(
             self.consented_future_contact and (reason not in unreacheable),
             field_applicable='future_studies',
         )
 
+        condition = reason not in unreacheable
+        self.validate_results_method(condition)
+
+        self.not_required_if(
+            NOT_APPLICABLE,
+            field='results_method',
+            field_required='results_dt')
+
+    def validate_results_method(self, condition, gte_18yrs=True):
+        gte_18yrs = self.child_age >= 18 if self.child_age else gte_18yrs
+        self.applicable_if_true(
+            (condition and gte_18yrs),
+            field_applicable='results_method')
+
     def validate_preg_subcohotA(self):
         subject_identifier = self.cleaned_data.get('subject_identifier')
         offstudy_point = self.cleaned_data.get('offstudy_point')
-        try:
-            antenantal_enrollment = self.antenantal_enrollment_model_cls.objects.get(
-                subject_identifier=subject_identifier)
-        except ObjectDoesNotExist:
-            pass
-        else:
-            if antenantal_enrollment and offstudy_point is None:
-                raise forms.ValidationError({
-                        'offstudy_point': 'Question 6 required for pregnant women'
-                    })
 
-    def validate_against_latest_visit(self, latest_visit = None):
+        anc_enrollment = self.antenantal_enrollment_model_cls.objects.filter(
+            subject_identifier=subject_identifier).exists()
+
+        if anc_enrollment:
+            if offstudy_point is None:
+                raise forms.ValidationError(
+                    {'offstudy_point':
+                     'Question 6 is required for pregnant women'})
+        else:
+            if bool(offstudy_point):
+                raise forms.ValidationError(
+                    {'offstudy_point':
+                     'This question is only applicable for pregnant women'})
+
+    def validate_against_latest_visit(self, latest_visit=None):
         self.visit_cls = django_apps.get_model(self.visit_model)
 
         subject_identifier = self.cleaned_data.get('subject_identifier')
@@ -114,3 +138,17 @@ class OffstudyFormValidator(FormValidator):
             return None
         else:
             return model_obj.future_contact == YES
+
+    @property
+    def child_age(self):
+        subject_identifier = self.cleaned_data.get('subject_identifier')
+        offstudy_dt = self.cleaned_data.get('offstudy_date')
+        if self.child_cohort_model:
+            try:
+                consent_obj = self.child_cohort_model_cls.objects.filter(
+                    subject_identifier=subject_identifier).latest(
+                        'assign_datetime')
+            except self.child_cohort_model_cls.DoesNotExist:
+                pass
+            else:
+                return consent_obj.child_age_at_date(offstudy_dt)

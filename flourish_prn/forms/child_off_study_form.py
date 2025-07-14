@@ -10,15 +10,15 @@ from ..models import ChildOffStudy
 
 
 class ChildOffStudyForm(FormValidatorMixin, forms.ModelForm):
+    cohort_model = 'flourish_caregiver.cohort'
     OffstudyFormValidator.visit_model = 'flourish_child.childvisit'
+    OffstudyFormValidator.child_cohort_model = cohort_model
 
     form_validator_cls = OffstudyFormValidator
 
     subject_identifier = forms.CharField(
         label='Subject Identifier',
         widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-
-    cohort_model = 'flourish_caregiver.cohort'
 
     @property
     def cohort_model_cls(self):
@@ -47,8 +47,7 @@ class ChildOffStudyForm(FormValidatorMixin, forms.ModelForm):
                 raise forms.ValidationError(
                     "Offstudy date cannot be before enrollment datetime.")
 
-    def validate_against_childage(self):
-        reason = self.cleaned_data.get('reason')
+    def get_child_age(self):
         try:
             cohort = self.cohort_model_cls.objects.filter(
                 subject_identifier=self.infant_identifier).latest(
@@ -56,11 +55,15 @@ class ChildOffStudyForm(FormValidatorMixin, forms.ModelForm):
         except self.cohort_model_cls.DoesNotExist:
             pass
         else:
-            child_age = cohort.child_age
-            if (child_age and child_age < 18 and
-                    reason in ['18_na_reconsent', '18_no_contact']):
-                raise forms.ValidationError(
-                    {'reason': 'Child is less than 18 years of age'})
+            return cohort.child_age
+
+    def validate_against_childage(self):
+        reason = self.cleaned_data.get('reason')
+        child_age = self.get_child_age()
+        if (child_age and child_age < 18 and
+                reason in ['18_na_reconsent', '18_no_contact']):
+            raise forms.ValidationError(
+                {'reason': 'Child is less than 18 years of age'})
 
     class Meta:
         model = ChildOffStudy
