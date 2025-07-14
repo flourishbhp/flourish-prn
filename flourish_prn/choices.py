@@ -1,4 +1,4 @@
-from edc_constants.constants import OTHER
+from edc_constants.constants import OTHER, NOT_APPLICABLE
 
 CAUSE_OF_DEATH_CAT = (
     ('hiv_related', 'HIV infection or HIV related diagnosis'),
@@ -163,4 +163,10 @@ LOCATION_REFERRAL = (
     ('g_west', 'G-West'),
     ('sebele', 'Sebele'),
     (OTHER, 'Other, specify'),
+)
+
+COMMUNICATION_METHODS = (
+    ('in_person', 'In-person'),
+    ('over_phone', 'Over the phone'),
+    (NOT_APPLICABLE, NOT_APPLICABLE),
 )
