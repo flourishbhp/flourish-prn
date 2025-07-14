@@ -54,7 +54,10 @@ class ChildOffStudyAdmin(ModelAdminMixin, admin.ModelAdmin):
                 'offstudy_date',
                 'reason',
                 'reason_other',
+                'results_method',
+                'results_dt',
                 'comment']}
          ), audit_fieldset_tuple)
 
-    radio_fields = {'reason': admin.VERTICAL}
+    radio_fields = {'reason': admin.VERTICAL,
+                    'results_method': admin.VERTICAL}

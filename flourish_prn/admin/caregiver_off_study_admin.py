@@ -66,12 +66,15 @@ class CaregiverOffStudyAdmin(ModelAdminMixin,  FieldsetsModelAdminMixin,
                 'reason_other',
                 'offstudy_point',
                 'future_studies',
+                'results_method',
+                'results_dt',
                 'comment']}
          ), audit_fieldset_tuple)
 
     radio_fields = {'reason': admin.VERTICAL,
                     'offstudy_point': admin.VERTICAL,
-                    'future_studies': admin.VERTICAL}
+                    'future_studies': admin.VERTICAL,
+                    'results_method': admin.VERTICAL}
 
     conditional_fieldlists = {
         'not_interested': Remove('future_studies')}
